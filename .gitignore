@@ -15,3 +15,7 @@ L2/a.out
 L3/bin/*
 L3/obj/*.o
 L3/prog.L2
+
+IR/bin/*
+IR/obj/*
+IR/prog.L3
