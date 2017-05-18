@@ -53,6 +53,9 @@ int main(int argc, char **argv) {
     L3::mergeFunc(f);
     L3::printFunc(*f);
 
+    std::string f_name = f->name;
+    f_name.erase(0, 1);
+
     for (auto i : f->instructions) {
 
       std::vector< std::tuple< int, L3::Instance * > > stack;
@@ -61,6 +64,10 @@ int main(int argc, char **argv) {
 
       for (int k = stack.size()-1; k >= 0; k--) {
         outputFile << t->Translate(std::get<0>(stack.at(k)), std::get<1>(stack.at(k)));
+        if (std::get<0>(stack.at(k)) == t->TNAME::LABEL) {
+
+          outputFile << "_" << f_name;
+        }
       }
 
     }

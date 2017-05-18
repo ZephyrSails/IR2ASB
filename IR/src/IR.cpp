@@ -47,7 +47,9 @@ namespace IR {
       // std::cout << "this->vars[0]->toString(): " << this->vars[0]->toString() << "\n";
       o << "\n\treturn " + this->vars[0]->toString();
     }
-    o << "\n\treturn";
+    else {
+      o << "\n\treturn";
+    }
   }
 
   IR::InsAssignCall::InsAssignCall(std::vector<std::string> & v) {

@@ -6,9 +6,7 @@
 
 namespace L3 {
   class Tile {
-    enum TNAME {
-      ADD_STORE, RETURN, ASSIGN, ASSIGN_CALL ,CALL, STORE ,C_BR ,BR ,LOAD ,ASSIGN_OP, LABEL
-    };
+
 
     std::map< int, std::string > TMAP = {
                 { TNAME::ADD_STORE, "ADD_STORE" },
@@ -24,6 +22,9 @@ namespace L3 {
                 { TNAME::ASSIGN_OP, "ASSIGN_OP" }
               };
   public:
+    enum TNAME {
+      ADD_STORE, RETURN, ASSIGN, ASSIGN_CALL ,CALL, STORE ,C_BR ,BR ,LOAD ,ASSIGN_OP, LABEL
+    };
     std::map< int, L3::Instance * > tiles;
 
     bool MatchTile(L3::Instance * ins, L3::Instance * til, std::vector< L3::Instance * > & leaf);

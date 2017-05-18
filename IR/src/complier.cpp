@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
     outputFile << "define " << f->name << " ( ";
 
     for (auto arg : f->arguments) {
-      outputFile << arg->name << " ";
+      outputFile << arg->toString() << " ";
     }
 
     outputFile << " ) {";
