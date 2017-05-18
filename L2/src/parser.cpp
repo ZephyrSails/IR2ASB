@@ -72,7 +72,7 @@ namespace L2 {
     > {};
 
   struct call:
-    pegtl::string < 'c', 'a', 'l', 'l' > {};
+    pegtl::string < 'c', 'a', 'l', 'l', ' ' > {};
 
   struct left_arrow:
     pegtl::string< '<', '-' > {};
@@ -423,6 +423,7 @@ namespace L2 {
   Item * new_item2(std::string reg, std::string offset) {
     Item *item = new_item(reg);
     //  item = ;
+    // std::cout << "probe1\n";
     item->value = std::stoll(offset);
     return item;
   }
@@ -442,6 +443,7 @@ namespace L2 {
 
         p.entryPointLabel = token;
       }
+      v.clear();
     }
   };
 
@@ -471,14 +473,18 @@ namespace L2 {
   template<> struct action < argument_number > {
     static void apply( const pegtl::input & in, L2::Program & p, std::vector<std::string> & v ) {
       L2::Function *currentF = p.functions.back();
+      // std::cout << "probe2\n";
       currentF->arguments = std::stoll(in.string());
+      v.clear();
     }
   };
 
   template<> struct action < local_number > {
     static void apply( const pegtl::input & in, L2::Program & p, std::vector<std::string> & v ) {
       L2::Function *currentF = p.functions.back();
+      // std::cout << "probe3\n";
       currentF->locals = std::stoll(in.string());
+      v.clear();
     }
   };
 
@@ -486,6 +492,12 @@ namespace L2 {
     static void apply( const pegtl::input & in, L2::Program & p, std::vector<std::string> & v ) {
       L2::Function *currentF = p.functions.back();
       L2::Instruction *newIns = new L2::Instruction();
+      // std::cout << "v.size() " << v.size() << "\n";
+      //
+      // for (int k = 0; k < v.size(); k++) {
+      //   std::cout << v[k] << " ";
+      // }
+      // std::cout << "\n";
 
       if (v.size() == 3) { // no mem, two op
         newIns->type = L2::INS::W_START;

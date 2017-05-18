@@ -75,6 +75,7 @@ void output_function(L2::Function * f, std::ofstream * outputFile, L2::Graph * g
   *outputFile << "\t(:" << f->name << "\n\t\t" << f->arguments << " " << f->locals << "\n";
 
   for (auto i : f->instructions) {
+    // std::cout << "i->type: " << i->type << "\n";
     output_instruction(i, outputFile, g, f->locals);
   }
 

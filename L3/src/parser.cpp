@@ -166,7 +166,7 @@ namespace L3 {
     L3_vars {};
 
   struct call:
-    pegtl::string< 'c', 'a', 'l', 'l' > {};
+    pegtl::string< 'c', 'a', 'l', 'l', ' ' > {};
 
   struct L3_ins_call:
     pegtl::seq<
@@ -176,7 +176,7 @@ namespace L3 {
     > {};
 
   struct load:
-    pegtl::string< 'l', 'o', 'a', 'd' > {};
+    pegtl::string< 'l', 'o', 'a', 'd', ' ' > {};
 
   struct ins_v_start:
     pegtl::seq<
@@ -234,7 +234,11 @@ namespace L3 {
     > {};
 
   struct ins_call:
-    L3_ins_call {};
+    pegtl::seq<
+      pegtl::string< 'c', 'a', 'l', 'l', ' ' >,
+      seps, callee, seps,
+      pegtl::one< '(' >, seps, argv, seps, pegtl::one< ')' >
+    > {};
 
   struct L3_instruction:
     pegtl::sor<
@@ -338,7 +342,7 @@ namespace L3 {
       L3::Instance *newIns = new L3::Var(v[0]);
       insert(newIns->KILL, v[0]);
 
-      if (v[1] == "call") {
+      if (v[1] == "call ") {
         std::vector<std::string> cv(v.begin()+1, v.end());
         if (!L3::LIBS.count(v[2])) {
           insert(newIns->GEN, v[2]);
@@ -347,7 +351,7 @@ namespace L3 {
           insert(newIns->GEN, v[k]);
         }
         newIns->instances.push_back(new L3::Call(cv));
-      } else if (v[1] == "load") {
+      } else if (v[1] == "load ") {
         insert(newIns->GEN, v[2]);
         newIns->instances.push_back(new L3::Load(v));
       } else if (v.size() == 4) { // cmp || op
@@ -424,10 +428,10 @@ namespace L3 {
 
       L3::Instance *newIns = new L3::Call(v);
 
-      if (!L3::LIBS.count(v[1])) {
-        insert(newIns->GEN, v[1]);
+      if (!L3::LIBS.count(v[0])) {
+        insert(newIns->GEN, v[0]);
       }
-      for (int k = 2; k < v.size(); k++) {
+      for (int k = 1; k < v.size(); k++) {
         insert(newIns->GEN, v[k]);
       }
       currentF->instructions.push_back(newIns);
