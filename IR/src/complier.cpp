@@ -43,9 +43,10 @@ int main(int argc, char **argv) {
     for (auto bb : f->bbs) {
       outputFile << "\n\t" << bb->label;
       for (auto ins : bb->inss) {
-        outputFile << "\n\t" << ins->toString();
+        ins->toL3(outputFile);
+        // outputFile << "\n\t" << ins->toString();
       }
-      outputFile << "\n\t" << bb->te->toString();
+      bb->te->toL3(outputFile);
     }
 
     outputFile << "\n}\n";

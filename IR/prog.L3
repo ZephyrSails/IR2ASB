@@ -1,19 +1,16 @@
 define :main (  ) {
 	:entry
-	
-	
-	v1 <- v1
-	v2 <- v2
 	br :myLabel1
 	:myLabel1
-	
-	
-	v3 <- v1 + v2
-	check <- v3 > 1
-	br check :true :false
-	:true
-	call print(v3)
-	return
-	:false
+	p0D_16807 <- 3 >> 1
+	v0_16807 <- p0D_16807
+	v0_16807 <- v0_16807 << 1
+	v0_16807 <- v0_16807 + 5
+	ar <- call allocate(v0_16807, 1)
+	v1_16807 <- ar + 8
+	store v1_16807 <- 3
+	v2_16807 <- ar + 16
+	store v2_16807 <- 3
+	call print(ar)
 	return
 }

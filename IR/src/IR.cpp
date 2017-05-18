@@ -25,12 +25,13 @@ namespace IR {
     }
   }
 
-  std::string IR::InsBr::toString() {
+  void IR::InsBr::toL3(std::ofstream &o) {
     if (this->vars.size() == 1) {
-      return "br " + this->vars[0]->toString();
+      o << "\n\tbr " + this->vars[0]->toString();
     } else {
-      return "br " + this->vars[0]->toString() + " " + this->vars[1]->toString() + " " + this->vars[2]->toString();
+      o << "\n\tbr " + this->vars[0]->toString() + " " + this->vars[1]->toString() + " " + this->vars[2]->toString();
     }
+    return;
   }
 
   IR::InsReturn::InsReturn(std::vector<std::string> & v) {
@@ -41,12 +42,12 @@ namespace IR {
     }
   }
 
-  std::string IR::InsReturn::toString() {
+  void IR::InsReturn::toL3(std::ofstream &o) {
     if (this->vars.size() > 0) {
       // std::cout << "this->vars[0]->toString(): " << this->vars[0]->toString() << "\n";
-      return "return " + this->vars[0]->toString();
+      o << "\n\treturn " + this->vars[0]->toString();
     }
-    return "return";
+    o << "\n\treturn";
   }
 
   IR::InsAssignCall::InsAssignCall(std::vector<std::string> & v) {
@@ -58,16 +59,16 @@ namespace IR {
     }
   }
 
-  std::string IR::InsAssignCall::toString() {
-    std::string res = this->vars[0]->toString() + " <- call " + this->vars[1]->toString() + "(";
+  void IR::InsAssignCall::toL3(std::ofstream &o) {
+    o << "\n\t" + this->vars[0]->toString() + " <- call " + this->vars[1]->toString() + "(";
     if (this->vars.size() > 2) {
-      res += this->vars[2]->toString();
+      o << this->vars[2]->toString();
     }
     for (int k = 3; k < this->vars.size(); k++) {
-      res += " " + this->vars[k]->toString();
+      o << " " + this->vars[k]->toString();
     }
-    res += ")";
-    return res;
+    o << ")";
+    return;
   }
 
   IR::InsOpAssign::InsOpAssign(std::vector<std::string> & v) {
@@ -77,8 +78,8 @@ namespace IR {
     }
   }
 
-  std::string IR::InsOpAssign::toString() {
-    return this->vars[0]->toString() + " <- " + this->vars[1]->toString() + " " + this->vars[2]->toString() + " " + this->vars[3]->toString();
+  void IR::InsOpAssign::toL3(std::ofstream &o) {
+    o << "\n\t" + this->vars[0]->toString() + " <- " + this->vars[1]->toString() + " " + this->vars[2]->toString() + " " + this->vars[3]->toString();
   }
 
 
@@ -87,8 +88,8 @@ namespace IR {
     this->vars.push_back(var);
   }
 
-  std::string IR::InsType::toString() {
-    return "";
+  void IR::InsType::toL3(std::ofstream &o) {
+    return;
   }
 
   IR::InsCall::InsCall(std::vector<std::string> & v) {
@@ -98,16 +99,16 @@ namespace IR {
     }
   }
 
-  std::string IR::InsCall::toString() {
-    std::string res = "call " + this->vars[0]->toString() + "(";
+  void IR::InsCall::toL3(std::ofstream &o) {
+    o << "\n\tcall " + this->vars[0]->toString() + "(";
     if (this->vars.size() > 1) {
-      res += this->vars[1]->toString();
+      o << this->vars[1]->toString();
     }
     for (int k = 2; k < this->vars.size(); k++) {
-      res += " " + this->vars[k]->toString();
+      o << " " + this->vars[k]->toString();
     }
-    res += ")";
-    return res;
+    o << ")";
+    return;
     // return "";
   }
 
@@ -127,8 +128,16 @@ namespace IR {
     this->vars.push_back(var);
   }
 
-  std::string IR::InsAssign::toString() {
-    return this->vars[0]->toString() + " <- " + this->vars[1]->toString();
+  void IR::InsAssign::toL3(std::ofstream &o) {
+    if (this->vars[0]->ts.size() > 0) {
+      std::string suffix = this->vars[0]->printAddr(o);
+      o << "\n\tstore addr_" << suffix << " <- " << this->vars[1]->toString();
+    } else if (this->vars[1]->ts.size() > 0) {
+      std::string suffix = this->vars[1]->printAddr(o);
+      o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
+    } else {
+      o << "\n\t" + this->vars[0]->toString() + " <- " + this->vars[1]->toString();
+    }
   }
 
   IR::InsLength::InsLength(std::vector<std::string> & v) {
@@ -140,19 +149,51 @@ namespace IR {
     }
   }
 
-  std::string IR::InsLength::toString() {
-    return "";
+  void IR::InsLength::toL3(std::ofstream &o) {
+    std::string suffix = std::to_string(rand());
+    o << "\n\taddr_" << suffix << " <- 8 * " << this->vars[2]->toString();
+    o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + 16";
+    o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + " << this->vars[1]->toString();
+    o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
+    return;
   }
 
   IR::InsNewArray::InsNewArray(std::vector<std::string> & v) {
-    for (int k = 1; k < v.size(); k++) {
+    IR::Var* var = new IR::Var(v[0]);
+    this->vars.push_back(var);
+    for (int k = 3; k < v.size(); k++) {
       IR::Var* var = new IR::Var(v[k]);
       this->vars.push_back(var);
     }
   }
 
-  std::string IR::InsNewArray::toString() {
-    return "";
+  void IR::InsNewArray::toL3(std::ofstream &o) {
+    std::string suffix = std::to_string(rand());
+    int d = this->vars.size()-1;
+
+    for (int k = 0; k < d; k++) {
+      o << "\n\tp" + std::to_string(k) + "D_" + suffix + " <- " + this->vars[k+1]->toString() + " >> 1";
+    }
+
+    o << "\n\tv0_" + suffix + " <- p0D_" + suffix;
+
+    for (int k = 1; k < d; k++) {
+      o << "\n\tv0_" + suffix + " <- v0_" + suffix + " * p" + std::to_string(k) + "D_" + suffix;
+    }
+
+    o << "\n\tv0_" + suffix + " <- v0_" + suffix + " << 1";
+    o << "\n\tv0_" + suffix + " <- v0_" + suffix + " + " + std::to_string(((d+1) << 1) + 1);
+    o << "\n\t" + this->vars[0]->toString() + " <- call allocate(v0_" + suffix + ", 1)";
+
+    o << "\n\tv1_" + suffix + " <- " + this->vars[0]->toString() + " + 8";
+    o << "\n\tstore v1_" + suffix + " <- " + std::to_string((d << 1) + 1);
+
+    for (int k = 0; k < d; k++) {
+      o << "\n\tv" + std::to_string(k+2) + "_" + suffix + " <- " + this->vars[0]->toString() + " + " + std::to_string((k+2) * 8);
+      o << "\n\tstore v" + std::to_string(k+2) + "_" + suffix + " <- " + this->vars[k+1]->toString();
+    }
+
+    return;
   }
 
   IR::InsNewTuple::InsNewTuple(std::vector<std::string> & v) {
@@ -160,8 +201,8 @@ namespace IR {
     this->vars.push_back(var);
   }
 
-  std::string IR::InsNewTuple::toString() {
-    return "";
+  void IR::InsNewTuple::toL3(std::ofstream &o) {
+    return;
   }
 
 
@@ -173,10 +214,6 @@ namespace IR {
     this->name = n;
     this->type = new IR::Type(t);
   }
-
-  // IR::Var::Var(std::string tStr, bool hasT) {
-  //
-  // }
 
   std::string IR::Var::toString() {
     // std::cout << "toString " << this->name << "\n";
@@ -203,21 +240,33 @@ namespace IR {
       }
     } else {
       this->name = str;
-      // switch (str[0]) {
-      //
-      //   // case ':':
-      //   //   this->name = str;
-      //   //   // this->type = IR::INS::LABEL;
-      //   //   break;
-      //   // case '%':
-      //   //   this->name = str;
-      //   //   // this->type = IR::INS::VAR;
-      //   //   break;
-      //   // default:
-      //   //   this->value = std::stoll(str);
-      //     // this->type = IR::INS::N;
-      // }
     }
   }
 
+  std::string IR::Var::printAddr(std::ofstream &o) {
+    int d = this->ts.size();
+    std::string suffix = std::to_string(rand());
+
+    for (int k = 1; k < d; k++) {
+      o << "\n\tADDR_D" << k << "_" << suffix << " <- " << this->toString() << " + " << (k + 2) * 8;
+      o << "\n\tD" << k << "_" << suffix << "_ <- load " << "ADDR_D" << k << "_" << suffix;
+      o << "\n\tD" << k << "_" << suffix << " <- " << "D" << k << "_" << suffix << "_ >> 1";
+    }
+
+    o << "\n\toffset_" << suffix << " <- " << this->ts[d-1]->toString() << " + " << (2 + d);
+    if (d > 1) {
+      o << "\n\tmult_" << suffix << " <- " << this->ts[d-1]->toString();
+    }
+
+    for (int k = d-2; k >= 0; k--) {
+      o << "\n\tinc_" << suffix << " <- mult_" << suffix << " * " << this->ts[k]->toString();
+      o << "\n\toffset_" << suffix << " <- offset_" << suffix << " + inc_" << suffix;
+      if (k != 0) {
+        o << "\n\tmult_" << suffix << " <- mult_" << suffix << " * D" << k << "_" << suffix;
+      }
+    }
+    o << "\n\toffset_" << suffix << " <- offset_" << suffix << " * 8";
+    o << "\n\taddr_" << suffix << " <- " << this->toString() << " + offset_" << suffix;
+    return suffix;
+  }
 }

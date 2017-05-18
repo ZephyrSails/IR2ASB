@@ -53,6 +53,7 @@ namespace IR {
     // Var(std::string n);
     Var(std::string n, bool hasT=false);
     std::string toString();
+    std::string printAddr(std::ofstream &o);
   };
 
   class Instruction {
@@ -64,68 +65,68 @@ namespace IR {
     std::string op;
     std::vector< IR::Var * > vars;
 
-    virtual std::string toString() = 0;
+    virtual void toL3(std::ofstream &outputFile) = 0;
   };
 
   class InsBr: public Instruction {
   public:
     InsBr(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
 
   };
 
   class InsReturn: public Instruction {
   public:
     InsReturn(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsLength: public Instruction {
   public:
     InsLength(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsAssignCall: public Instruction {
   public:
     InsAssignCall(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsAssign: public Instruction {
   public:
     InsAssign(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsOpAssign: public Instruction {
   public:
     InsOpAssign(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsType: public Instruction {
   public:
     InsType(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsCall: public Instruction {
   public:
     InsCall(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsNewArray: public Instruction {
   public:
     InsNewArray(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class InsNewTuple: public Instruction {
   public:
     InsNewTuple(std::vector<std::string> & v);
-    std::string toString();
+    void toL3(std::ofstream &outputFile);
   };
 
   class BasicBlock {
@@ -142,8 +143,6 @@ namespace IR {
     std::vector< IR::Var * > arguments;
     std::vector< IR::BasicBlock * > bbs;
   };
-
-
 
   struct Program {
     std::vector< IR::Function * > functions;

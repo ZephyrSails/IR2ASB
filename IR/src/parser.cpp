@@ -175,8 +175,8 @@ namespace IR {
   struct vars:
     IR_vars {};
 
-  struct args:
-    IR_vars {};
+  // struct args:
+  //   IR_vars {};
 
   struct call:
     pegtl::string< 'c', 'a', 'l', 'l' > {};
@@ -202,10 +202,32 @@ namespace IR {
   struct length:
     pegtl::string< 'l', 'e', 'n', 'g', 't', 'h' > {};
 
+  struct s_new:
+    pegtl::string< 'n', 'e', 'w' > {};
+
+  struct Array:
+    pegtl::string < 'A', 'r', 'r', 'a', 'y' > {};
+
+  struct Tuple:
+    pegtl::string < 'T', 'u', 'p', 'l', 'e' > {};
+
   struct ins_v_start:
     pegtl::seq<
       varSqureT, seps, left_arrow, seps,
       pegtl::sor<
+        pegtl::seq<
+          s_new,
+          seps,
+          pegtl::sor<
+                    //  pegtl::one< '(' >, seps, argv, seps, pegtl::one< ')' >
+            pegtl::seq<
+              Array, pegtl::one< '(' >, seps, argv, seps, pegtl::one< ')' >
+            >,
+            pegtl::seq<
+              Tuple, pegtl::one< '(' >, seps, t, seps, pegtl::one< ')' >
+            >
+          >
+        >,
         label,
         IR_ins_call,
         pegtl::seq<
@@ -275,29 +297,26 @@ namespace IR {
       var
     > {};
 
-  struct Array:
-    pegtl::string < 'A', 'r', 'r', 'a', 'y' > {};
 
-  struct Tuple:
-    pegtl::string < 'T', 'u', 'p', 'l', 'e' > {};
 
-  struct ins_new:
-    pegtl::seq<
-      pegtl::string< 'n', 'e', 'w' >,
-      seps,
-      pegtl::sor<
-        pegtl::seq<
-          Array, pegtl::one< '(' >, args, pegtl::one< ')' >
-        >,
-        pegtl::seq<
-          Tuple, pegtl::one< '(' >, t, pegtl::one< ')' >
-        >
-      >
-    > {};
+  // struct ins_new:
+  //   pegtl::seq<
+  //     pegtl::string< 'n', 'e', 'w' >,
+  //     seps,
+  //     pegtl::sor<
+  //               //  pegtl::one< '(' >, seps, argv, seps, pegtl::one< ')' >
+  //       pegtl::seq<
+  //         Array, pegtl::one< '(' >, seps, argv, seps, pegtl::one< ')' >
+  //       >,
+  //       pegtl::seq<
+  //         Tuple, pegtl::one< '(' >, seps, t, seps, pegtl::one< ')' >
+  //       >
+  //     >
+  //   > {};
 
   struct IR_instruction:
     pegtl::sor<
-      ins_new,
+      // ins_new,
       ins_call,
       ins_type,
       ins_v_start
@@ -340,13 +359,16 @@ namespace IR {
       type, seps, var
     > {};
 
+  struct args:
+    pegtl::star< type_var, seps > {};
 
   struct IR_function:
     pegtl::seq<
       pegtl::string< 'd', 'e', 'f', 'i', 'n', 'e' >,
       seps, function_ret_type, seps, function_name, seps,
       pegtl::one< '(' >, seps,
-      pegtl::star< type_var, seps >,
+      args,
+      // pegtl::star< type_var, seps >,
       seps, pegtl::one< ')' >, seps,
       pegtl::one< '{' >,
       seps,
@@ -422,6 +444,11 @@ namespace IR {
     }
   };
 
+  // template<> struct action < type_var > {
+  //   static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
+  //
+  // };
+
   template<> struct action < bb_label > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
@@ -436,8 +463,10 @@ namespace IR {
   template<> struct action < args > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
+      // std::cout << "v.size()-1: " << v.size()-1 << "\n";
 
-      for (int k = 0; k < v.size()-1; k += 2) {
+      for (int k = 0; k < v.size(); k += 2) {
+        // std::cout << "hello v.size()-1: " << v.size()-1 << " k: " << k << "\n";
         currF->arguments.push_back(new IR::Var(v[k], v[k+1]));
       }
 
@@ -447,22 +476,22 @@ namespace IR {
 
   // Instructions builder
 
-  template<> struct action < ins_new > {
-    static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
-      IR::Function *currF = p.functions.back();
-      IR::BasicBlock *currBB = currF->bbs.back();
-      IR::Instruction *newIns;
-
-      if (v[0][0] == 'A') { // Array
-        newIns = new IR::InsNewArray(v);
-      } else {  // Tuple
-        newIns = new IR::InsNewTuple(v);
-      }
-
-      currBB->inss.push_back(newIns);
-      v.clear();
-    }
-  };
+  // template<> struct action < ins_new > {
+  //   static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
+  //     IR::Function *currF = p.functions.back();
+  //     IR::BasicBlock *currBB = currF->bbs.back();
+  //     IR::Instruction *newIns;
+  //
+  //     if (v[0][0] == 'A') { // Array
+  //       newIns = new IR::InsNewArray(v);
+  //     } else {  // Tuple
+  //       newIns = new IR::InsNewTuple(v);
+  //     }
+  //
+  //     currBB->inss.push_back(newIns);
+  //     v.clear();
+  //   }
+  // };
 
   template<> struct action < ins_call > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
@@ -497,7 +526,14 @@ namespace IR {
       std::cout << "busErr: v.size(): " << v.size() << "\n";
       if (v[1] == "length") {
         newIns = new IR::InsLength(v);
-      } else if (v[1] == "call") {
+      } else if (v[1] == "new") {
+        if (v[2][0] == 'A') { // Array
+          newIns = new IR::InsNewArray(v);
+        } else {  // Tuple
+          newIns = new IR::InsNewTuple(v);
+        }
+      }
+        else if (v[1] == "call") {
         newIns = new IR::InsAssignCall(v);
       } else if (v.size() == 2) {
 
@@ -541,6 +577,12 @@ namespace IR {
   // Actions to collect string from rules, should be a better way.
   //
   template<> struct action < var > {
+    static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
+      v.push_back(in.string());
+    }
+  };
+
+  template<> struct action < s_new > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       v.push_back(in.string());
     }
