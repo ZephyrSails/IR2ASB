@@ -44,7 +44,7 @@ namespace L3 {
     // D1 <- V1 + N; store D1 <- s
     v = {"D1", "S"};
     this->tiles[TNAME::ADD_STORE] = new L3::Store(v);
-    v = {"D1", "V1", "+", "N"};
+    v = {"D1", "V1", "+", "8"};
     this->tiles[TNAME::ADD_STORE]->instances[0]->instances.push_back(new L3::Op(v));
   }
 
