@@ -15,10 +15,10 @@ namespace L3 {
     this->tiles[TNAME::ASSIGN]->instances.push_back(new L3::Var("S"));
     // var <- call callee ( args )
     this->tiles[TNAME::ASSIGN_CALL] = new L3::Var("V1");
-    v = {"call", ":L1"};
+    v = {":L1"};
     this->tiles[TNAME::ASSIGN_CALL]->instances.push_back(new L3::Call(v));
     // call callee ( args )
-    v = {"call", ":L1"};
+    v = {":L1"};
     this->tiles[TNAME::CALL] = new L3::Call(v);
     // br var label label
     v = {"V1", ":L1", ":L2"};

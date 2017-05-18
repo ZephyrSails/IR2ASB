@@ -343,7 +343,7 @@ namespace L3 {
       insert(newIns->KILL, v[0]);
 
       if (v[1] == "call ") {
-        std::vector<std::string> cv(v.begin()+1, v.end());
+        std::vector<std::string> cv(v.begin()+2, v.end());
         if (!L3::LIBS.count(v[2])) {
           insert(newIns->GEN, v[2]);
         }

@@ -4,7 +4,7 @@
 
 namespace L3 {
   void debug(std::string str) {
-    if (false) {
+    if (true) {
       std::cout << str << "\n";
     }
   }
@@ -130,8 +130,8 @@ namespace L3 {
   }
 
   Call::Call(std::vector<std::string> & v) {
-    this->name = v[1];
-    for (int k = 2; k < v.size(); k++) {
+    this->name = v[0];
+    for (int k = 1; k < v.size(); k++) {
       this->instances.push_back(new L3::Var(v[k]));
     }
   }
