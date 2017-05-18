@@ -245,6 +245,8 @@ namespace IR {
         pegtl::seq<
           length,
           seps,
+          var,
+          seps,
           t
         >
       >

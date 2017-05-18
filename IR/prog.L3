@@ -11,6 +11,10 @@ define :main (  ) {
 	store v1_16807 <- 3
 	v2_16807 <- ar + 16
 	store v2_16807 <- 3
-	call print(ar)
+	addr_282475249 <- 8 * 0
+	addr_282475249 <- addr_282475249 + 16
+	addr_282475249 <- addr_282475249 + ar
+	arLen <- load addr_282475249
+	call print(arLen)
 	return
 }
