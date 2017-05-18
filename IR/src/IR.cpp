@@ -115,29 +115,38 @@ namespace IR {
   IR::InsAssign::InsAssign(std::vector<std::string> & v) {
     IR::Var* var;
     if (v[0].find("[") != std::string::npos) {
+      std::cout << "probe 1\n";
       var = new IR::Var(v[0], true);
     } else {
+      std::cout << "probe 11\n";
       var = new IR::Var(v[0]);
     }
     this->vars.push_back(var);
+
     if (v[1].find("[") != std::string::npos) {
-      var = new IR::Var(v[0], true);
+      std::cout << "probe 2\n";
+      var = new IR::Var(v[1], true);
     } else {
-      var = new IR::Var(v[0]);
+      std::cout << "probe 2\n";
+      var = new IR::Var(v[1]);
     }
     this->vars.push_back(var);
   }
 
   void IR::InsAssign::toL3(std::ofstream &o) {
     if (this->vars[0]->ts.size() > 0) {
+      // std::cout << "probe 1\n";
       std::string suffix = this->vars[0]->printAddr(o);
       o << "\n\tstore addr_" << suffix << " <- " << this->vars[1]->toString();
     } else if (this->vars[1]->ts.size() > 0) {
+      // std::cout << "probe 2\n";
       std::string suffix = this->vars[1]->printAddr(o);
       o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
     } else {
+      // std::cout << "probe 3\n";
       o << "\n\t" + this->vars[0]->toString() + " <- " + this->vars[1]->toString();
     }
+    o << "\n";
   }
 
   IR::InsLength::InsLength(std::vector<std::string> & v) {
@@ -155,7 +164,7 @@ namespace IR {
     o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + 16";
     o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + " << this->vars[1]->toString();
     o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
-    return;
+    o << "\n";
   }
 
   IR::InsNewArray::InsNewArray(std::vector<std::string> & v) {
@@ -193,7 +202,7 @@ namespace IR {
       o << "\n\tstore v" + std::to_string(k+2) + "_" + suffix + " <- " + this->vars[k+1]->toString();
     }
 
-    return;
+    o << "\n";
   }
 
   IR::InsNewTuple::InsNewTuple(std::vector<std::string> & v) {
@@ -223,17 +232,21 @@ namespace IR {
     return this->name;
   }
 
-  IR::Var::Var(std::string str, bool hasT) {
+  IR::Var::Var(std::string & str, bool hasT) {
     if (hasT) {
+      std::cout << "str: " << str;
       int r = 0;
       while (str[r] != '[') {
+        std::cout << "r: " << r << " str[r]: " << str[r] << "\n";
         r++;
       }
       this->name = str.substr(0, r);
       int l = r + 1;
       for (; r < str.size(); r++) {
         if (str[r] == ']') {
-          IR::Var* t = new IR::Var(str.substr(l, r - l));
+          std::cout << "r: " << r << " str[r]: " << str[r] << "\n";
+          std::string sub = str.substr(l, r - l);
+          IR::Var* t = new IR::Var(sub);
           this->ts.push_back(t);
           l = r + 2;
         }

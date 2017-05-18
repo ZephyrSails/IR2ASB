@@ -510,9 +510,8 @@ namespace IR {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
       IR::BasicBlock *currBB = currF->bbs.back();
-      std::cout << "v.size():" << v.size() << "\n";
+      // std::cout << "v.size():" << v.size() << "\n";
       IR::Instruction *newIns = new IR::InsType(v);
-
 
       currBB->inss.push_back(newIns);
       v.clear();
@@ -538,10 +537,10 @@ namespace IR {
         else if (v[1] == "call") {
         newIns = new IR::InsAssignCall(v);
       } else if (v.size() == 2) {
-
+        std::cout << "busErr: probe1\n";
         newIns = new IR::InsAssign(v);
       } else if (v.size() == 4){
-        std::cout << "busErr \n";
+        // std::cout << "busErr \n";
         newIns = new IR::InsOpAssign(v);
       }
 

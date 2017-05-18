@@ -51,7 +51,7 @@ namespace IR {
     std::vector< IR::Var * > ts;
     Var(std::string t, std::string n);
     // Var(std::string n);
-    Var(std::string n, bool hasT=false);
+    Var(std::string & n, bool hasT=false);
     std::string toString();
     std::string printAddr(std::ofstream &o);
   };
