@@ -1,22 +1,20 @@
 define :main (  ) {
 	:entry
-	br :myLabel1
-	:myLabel1
-	p0D_16807 <- 3 >> 1
-	v0_16807 <- p0D_16807
-	v0_16807 <- v0_16807 << 1
-	v0_16807 <- v0_16807 + 5
-	ar <- call allocate(v0_16807, 1)
-	v1_16807 <- ar + 8
-	store v1_16807 <- 3
-	v2_16807 <- ar + 16
-	store v2_16807 <- 3
+	callerFP <- call :myF()
+	v <- call callerFP(2)
+	call print(v)
+	return
+}
+define :myF (  ) {
+	:entry
+	fp <- :myOtherF
 
-	offset_282475249 <- 0 + 3
-	offset_282475249 <- offset_282475249 * 8
-	addr_282475249 <- ar + offset_282475249
-	arElement <- load addr_282475249
-
-	call print(arElement)
+	return fp
+	return
+}
+define :myOtherF ( %p  ) {
+	:entry
+	r <- p + 1
+	return r
 	return
 }

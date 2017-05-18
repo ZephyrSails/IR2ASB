@@ -143,17 +143,20 @@ namespace L3 {
     > {};
 
   struct argv:
-    pegtl::seq<
-      t,
-      seps,
-      pegtl::star<
-        pegtl::seq<
-          pegtl::one< ',' >,
-          seps,
-          t,
-          seps
+    pegtl::sor<
+      pegtl::seq<
+        t,
+        seps,
+        pegtl::star<
+          pegtl::seq<
+            pegtl::one< ',' >,
+            seps,
+            t,
+            seps
+          >
         >
-      >
+      >,
+      seps
     > {};
 
   struct vars:
