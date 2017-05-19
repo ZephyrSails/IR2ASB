@@ -472,30 +472,13 @@ namespace IR {
       for (int k = 0; k < v.size(); k += 2) {
         std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
         currF->arguments.push_back(new IR::Var(v[k], v[k+1]));
+
+        currF->type_map[v[k+1]] = new IR::Type(v[k]);
       }
 
       v.clear();
     }
   };
-
-  // Instructions builder
-
-  // template<> struct action < ins_new > {
-  //   static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
-  //     IR::Function *currF = p.functions.back();
-  //     IR::BasicBlock *currBB = currF->bbs.back();
-  //     IR::Instruction *newIns;
-  //
-  //     if (v[0][0] == 'A') { // Array
-  //       newIns = new IR::InsNewArray(v);
-  //     } else {  // Tuple
-  //       newIns = new IR::InsNewTuple(v);
-  //     }
-  //
-  //     currBB->inss.push_back(newIns);
-  //     v.clear();
-  //   }
-  // };
 
   template<> struct action < type_var > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
@@ -520,6 +503,8 @@ namespace IR {
       IR::Function *currF = p.functions.back();
       IR::BasicBlock *currBB = currF->bbs.back();
       IR::Instruction *newIns = new IR::InsType(v);
+
+      currF->type_map[v[1]] = new IR::Type(v[0]);
 
       currBB->inss.push_back(newIns);
       v.clear();
