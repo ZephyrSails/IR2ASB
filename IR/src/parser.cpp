@@ -178,9 +178,6 @@ namespace IR {
   struct vars:
     IR_vars {};
 
-  // struct args:
-  //   IR_vars {};
-
   struct call:
     pegtl::string< 'c', 'a', 'l', 'l' > {};
 
@@ -365,7 +362,14 @@ namespace IR {
     > {};
 
   struct args:
-    pegtl::star< type_var, seps > {};
+    pegtl::seq<
+      pegtl::rep_max< 1,
+        type_var, seps
+      >,
+      pegtl::star<
+        pegtl::one< ',' >, seps, type_var, seps
+      >
+    > {};
 
   struct IR_function:
     pegtl::seq<
@@ -373,7 +377,6 @@ namespace IR {
       seps, function_ret_type, seps, function_name, seps,
       pegtl::one< '(' >, seps,
       args,
-      // pegtl::star< type_var, seps >,
       seps, pegtl::one< ')' >, seps,
       pegtl::one< '{' >,
       seps,
@@ -449,11 +452,6 @@ namespace IR {
     }
   };
 
-  // template<> struct action < type_var > {
-  //   static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
-  //
-  // };
-
   template<> struct action < bb_label > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
@@ -468,10 +466,11 @@ namespace IR {
   template<> struct action < args > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
-      // std::cout << "v.size()-1: " << v.size()-1 << "\n";
+      std::cout << "v.size(): " << v.size() << "\n";
+
 
       for (int k = 0; k < v.size(); k += 2) {
-        // std::cout << "hello v.size()-1: " << v.size()-1 << " k: " << k << "\n";
+        std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
         currF->arguments.push_back(new IR::Var(v[k], v[k+1]));
       }
 
@@ -498,6 +497,13 @@ namespace IR {
   //   }
   // };
 
+  template<> struct action < type_var > {
+    static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
+      std::cout << "type_var: " << in.string() << "\n";
+      // v.clear();
+    }
+  };
+
   template<> struct action < ins_call > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
@@ -513,7 +519,6 @@ namespace IR {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
       IR::BasicBlock *currBB = currF->bbs.back();
-      // std::cout << "v.size():" << v.size() << "\n";
       IR::Instruction *newIns = new IR::InsType(v);
 
       currBB->inss.push_back(newIns);

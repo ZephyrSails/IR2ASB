@@ -33,9 +33,12 @@ int main(int argc, char **argv) {
 
   for (auto f : p.functions) {
     outputFile << "define " << f->name << " ( ";
+    if (f->arguments.size() > 0) {
+      outputFile << f->arguments[0]->toString();
+    }
 
-    for (auto arg : f->arguments) {
-      outputFile << arg->toString() << " ";
+    for (int k = 1; k < f->arguments.size(); k++) {
+      outputFile << ", " << f->arguments[k]->toString();
     }
 
     outputFile << " ) {";

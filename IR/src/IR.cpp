@@ -67,7 +67,7 @@ namespace IR {
       o << this->vars[2]->toString();
     }
     for (int k = 3; k < this->vars.size(); k++) {
-      o << " " + this->vars[k]->toString();
+      o << ", " + this->vars[k]->toString();
     }
     o << ")";
     return;
@@ -107,7 +107,7 @@ namespace IR {
       o << this->vars[1]->toString();
     }
     for (int k = 2; k < this->vars.size(); k++) {
-      o << " " + this->vars[k]->toString();
+      o << ", " + this->vars[k]->toString();
     }
     o << ")";
     return;
