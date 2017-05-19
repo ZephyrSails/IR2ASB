@@ -1,29 +1,88 @@
 define :main (  ) {
 	:entry
-	p0D_16807 <- 3 >> 1
+	p0D_16807 <- 5 >> 1
 	p1D_16807 <- 5 >> 1
 	v0_16807 <- p0D_16807
 	v0_16807 <- v0_16807 * p1D_16807
 	v0_16807 <- v0_16807 << 1
 	v0_16807 <- v0_16807 + 7
-	ar <- call allocate(v0_16807, 1)
-	v1_16807 <- ar + 8
+	a <- call allocate(v0_16807, 1)
+	v1_16807 <- a + 8
 	store v1_16807 <- 5
-	v2_16807 <- ar + 16
-	store v2_16807 <- 3
-	v3_16807 <- ar + 24
+	v2_16807 <- a + 16
+	store v2_16807 <- 5
+	v3_16807 <- a + 24
 	store v3_16807 <- 5
 
-	l <- call :myF(ar)
-	call print(l)
+	call :initArray(a)
+	call print(a)
+	call :printE(a, 0, 0)
+	call :printE(a, 0, 1)
+	call :printE(a, 1, 0)
+	call :printE(a, 1, 1)
 	return
 }
-define :myF ( a ) {
-	:entry
-	addr_282475249 <- 8 * 1
-	addr_282475249 <- addr_282475249 + 16
-	addr_282475249 <- addr_282475249 + ar
-	l <- load addr_282475249
+define :initArray ( A ) {
+	:init
+	ADDR_D2_282475249 <- A + 24
+	D2_282475249_ <- load ADDR_D2_282475249
+	D2_282475249 <- D2_282475249_ >> 1
+	offset_282475249 <- 0 + 4
+	mult_282475249 <- D2_282475249
+	inc_282475249 <- mult_282475249 * 0
+	offset_282475249 <- offset_282475249 + inc_282475249
+	offset_282475249 <- offset_282475249 * 8
+	addr_282475249 <- A + offset_282475249
+	store addr_282475249 <- 1
 
-	return l
+	ADDR_D2_1622650073 <- A + 24
+	D2_1622650073_ <- load ADDR_D2_1622650073
+	D2_1622650073 <- D2_1622650073_ >> 1
+	offset_1622650073 <- 1 + 4
+	mult_1622650073 <- D2_1622650073
+	inc_1622650073 <- mult_1622650073 * 0
+	offset_1622650073 <- offset_1622650073 + inc_1622650073
+	offset_1622650073 <- offset_1622650073 * 8
+	addr_1622650073 <- A + offset_1622650073
+	store addr_1622650073 <- 3
+
+	ADDR_D2_984943658 <- A + 24
+	D2_984943658_ <- load ADDR_D2_984943658
+	D2_984943658 <- D2_984943658_ >> 1
+	offset_984943658 <- 0 + 4
+	mult_984943658 <- D2_984943658
+	inc_984943658 <- mult_984943658 * 1
+	offset_984943658 <- offset_984943658 + inc_984943658
+	offset_984943658 <- offset_984943658 * 8
+	addr_984943658 <- A + offset_984943658
+	store addr_984943658 <- 5
+
+	ADDR_D2_1144108930 <- A + 24
+	D2_1144108930_ <- load ADDR_D2_1144108930
+	D2_1144108930 <- D2_1144108930_ >> 1
+	offset_1144108930 <- 1 + 4
+	mult_1144108930 <- D2_1144108930
+	inc_1144108930 <- mult_1144108930 * 1
+	offset_1144108930 <- offset_1144108930 + inc_1144108930
+	offset_1144108930 <- offset_1144108930 * 8
+	addr_1144108930 <- A + offset_1144108930
+	store addr_1144108930 <- 7
+
+	return
+}
+define :printE ( A, i, j ) {
+	:entry
+	ADDR_D2_470211272 <- A + 24
+	D2_470211272_ <- load ADDR_D2_470211272
+	D2_470211272 <- D2_470211272_ >> 1
+	offset_470211272 <- j + 4
+	mult_470211272 <- D2_470211272
+	inc_470211272 <- mult_470211272 * i
+	offset_470211272 <- offset_470211272 + inc_470211272
+	offset_470211272 <- offset_470211272 * 8
+	addr_470211272 <- A + offset_470211272
+	e <- load addr_470211272
+
+	call print(e)
+	return
 }

@@ -261,23 +261,27 @@ namespace IR {
   std::string IR::Var::printAddr(std::ofstream &o) {
     int d = this->ts.size();
     std::string suffix = std::to_string(rand());
+    // A[D1][D2][D3]
+    // A[k][i][j]
+    // 16 + (3 * 8) + (k * D2 * D3 + i * D3 + j)
 
-    for (int k = 1; k < d; k++) {
-      o << "\n\tADDR_D" << k << "_" << suffix << " <- " << this->toString() << " + " << (k + 2) * 8;
+    for (int k = 2; k <= d; k++) {
+      o << "\n\tADDR_D" << k << "_" << suffix << " <- " << this->toString() << " + " << (k + 1) * 8;
       o << "\n\tD" << k << "_" << suffix << "_ <- load " << "ADDR_D" << k << "_" << suffix;
       o << "\n\tD" << k << "_" << suffix << " <- " << "D" << k << "_" << suffix << "_ >> 1";
     }
 
     o << "\n\toffset_" << suffix << " <- " << this->ts[d-1]->toString() << " + " << (2 + d);
     if (d > 1) {
-      o << "\n\tmult_" << suffix << " <- " << this->ts[d-1]->toString();
+      o << "\n\tmult_" << suffix << " <- D" << d << "_" << suffix;
+      // o << "\n\tmult_" << suffix << " <- " << this->ts[d-1]->toString();
     }
 
     for (int k = d-2; k >= 0; k--) {
       o << "\n\tinc_" << suffix << " <- mult_" << suffix << " * " << this->ts[k]->toString();
       o << "\n\toffset_" << suffix << " <- offset_" << suffix << " + inc_" << suffix;
       if (k != 0) {
-        o << "\n\tmult_" << suffix << " <- mult_" << suffix << " * D" << k << "_" << suffix;
+        o << "\n\tmult_" << suffix << " <- mult_" << suffix << " * D" << k+1 << "_" << suffix;
       }
     }
     o << "\n\toffset_" << suffix << " <- offset_" << suffix << " * 8";
