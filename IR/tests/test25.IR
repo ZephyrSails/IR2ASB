@@ -6,7 +6,7 @@ define void :main ( ){
   %ar <- new Array(3, 5)
   %l <- call :myF(%ar)
   call print(%l)
-  return 
+  return
 
 }
 
@@ -14,7 +14,7 @@ define int64 :myF (int64[][] %a){
 
   :entry
   int64 %l
-  %l <- length %ar 1
+  %l <- length %a 1
   return %l
 
 }
