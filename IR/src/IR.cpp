@@ -276,7 +276,7 @@ namespace IR {
 
     std::cout << "this->name: " << this->name << " currF->type_map[this->name]->type: " << currF->type_map[this->name]->type << "\n";
     if (currF->type_map[this->name]->type == IR::TYPE::TUPLE) {
-      o << "\n\tADD_" << suffix << " <- " << this->toString() << " + " << (std::stoll(this->ts[0]->name) * 8) + 8;
+      o << "\n\taddr_" << suffix << " <- " << this->toString() << " + " << (std::stoll(this->ts[0]->name) * 8) + 8;
     } else {
 
       // A[D1][D2][D3]

@@ -1,57 +1,47 @@
 define :main (  ) {
 	:entry
-	t <- call :createMyClosure(3)
-	v <- call :callMyClosure(t, 4)
-	x <- call :encodeValue(v)
-	call print(x)
+	t <- call :createTuple(3)
+	v <- call :myF(t, 4)
+	v <- call :encodeValue(v)
+	call print(v)
 	return
 }
-define :createMyClosure ( p1 ) {
+define :createTuple ( p1 ) {
 	:entry
 	x2 <- 21
 
 	p <- call allocate(9, 1)
-	ADD_16807 <- p + 8
-	store addr_16807 <- :myF
+	addr_16807 <- p + 8
+	store addr_16807 <- 0
 
-	ADD_282475249 <- p + 16
+	addr_282475249 <- p + 16
 	store addr_282475249 <- 1
 
-	ADD_1622650073 <- p + 24
+	addr_1622650073 <- p + 24
 	store addr_1622650073 <- p1
 
-	ADD_984943658 <- p + 32
+	addr_984943658 <- p + 32
 	store addr_984943658 <- x2
 
 	return p
 }
-define :callMyClosure ( c, argClosure ) {
-	:entry
-	ADD_1144108930 <- c + 8
-	fp <- load addr_1144108930
-
-	ADD_470211272 <- c + 16
-	arityOfC <- load addr_470211272
-
-	checkArgs <- arityOfC = 1
-	br checkArgs :true :false
-	:true
-	finalResult <- call fp(c, argClosure)
-	finalResultEncoded <- call :encodeValue(finalResult)
-	call print(finalResultEncoded)
-	return finalResult
-	:false
-	return 0
-}
 define :myF ( c, p1 ) {
 	:entry
-	ADD_101027544 <- c + 24
-	x1 <- load addr_101027544
+	addr_1144108930 <- c + 24
+	x1 <- load addr_1144108930
 
-	ADD_1457850878 <- c + 32
-	x2 <- load addr_1457850878
+	addr_470211272 <- c + 32
+	x2 <- load addr_470211272
 
+	encodedX1 <- call :encodeValue(x1)
+	call print(encodedX1)
+	encodedX2 <- call :encodeValue(x2)
+	call print(encodedX2)
+	encodedP1 <- call :encodeValue(p1)
+	call print(encodedP1)
 	r1 <- x1 + x2
+	encodedR1 <- call :encodeValue(r1)
+	call print(encodedR1)
 	r2 <- r1 + p1
 	return r2
 }
