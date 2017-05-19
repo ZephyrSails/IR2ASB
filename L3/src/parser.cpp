@@ -314,6 +314,8 @@ namespace L3 {
     static void apply( const pegtl::input & in, L3::Program & p, std::vector<std::string> & v ) {
       L3::Function *newF = new L3::Function();
       std::string token = in.string();
+      token.erase(0, 1);
+      // L3::F_NAME.insert(token);
       newF->name = token;
 
       p.functions.push_back(newF);
@@ -360,6 +362,8 @@ namespace L3 {
         newIns->instances.push_back(new L3::Op(v));
       } else { // var <- s
         insert(newIns->GEN, v[1]);
+        // std::string f_name = currentF->name;
+        // f_name.erase(0, 1);
         newIns->instances.push_back(new L3::Var(v[1]));
       }
 
@@ -371,6 +375,9 @@ namespace L3 {
   template<> struct action < ins_store > {
     static void apply( const pegtl::input & in, L3::Program & p, std::vector<std::string> & v ) {
       L3::Function *currentF = p.functions.back();
+
+      // std::string f_name = currentF->name;
+      // f_name.erase(0, 1);
 
       L3::Instance *newIns = new L3::Store(v);
 
@@ -400,6 +407,9 @@ namespace L3 {
     static void apply( const pegtl::input & in, L3::Program & p, std::vector<std::string> & v ) {
       L3::Function *currentF = p.functions.back();
 
+      // std::string f_name = currentF->name;
+      // f_name.erase(0, 1);
+
       L3::Instance *newIns = new L3::Var(in.string());
 
       currentF->instructions.push_back(newIns);
@@ -425,6 +435,9 @@ namespace L3 {
   template<> struct action < ins_call > {
     static void apply( const pegtl::input & in, L3::Program & p, std::vector<std::string> & v ) {
       L3::Function *currentF = p.functions.back();
+
+      // std::string f_name = currentF->name;
+      // f_name.erase(0, 1);
 
       L3::Instance *newIns = new L3::Call(v);
 

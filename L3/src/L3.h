@@ -29,6 +29,7 @@ namespace L3 {
 
   const std::vector< std::string > ARGS = { "rdi", "rsi", "rdx", "rcx", "r8", "r9" };
   const std::set< std::string > LIBS = { "allocate", "print", "array-error" };
+  // std::set< std::string > F_NAME = {};
 
   enum INS { VAR, N, LABEL, ELSE };
 
@@ -45,6 +46,7 @@ namespace L3 {
 
     std::vector<L3::Instance *> instances;
 
+    virtual std::string toL2(std::string f_name) = 0;
     virtual std::string toString() = 0;
 
     bool equal(L3::Instance * ins);
@@ -55,44 +57,51 @@ namespace L3 {
   class Var: public Instance {
   public:
     // Var();
-    Var(std::string name);
+    Var(std::string name, std::string fname="");
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Op: public Instance {
   public:
     Op(std::vector<std::string> & v);
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Br: public Instance {
   public:
     Br(std::vector<std::string> & v);
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Store: public Instance {
   public:
-    Store(std::vector<std::string> & v);
+    Store(std::vector<std::string> & v, std::string f_name = "");
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Load: public Instance {
   public:
     Load(std::vector<std::string> & v);
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Call: public Instance {
   public:
-    Call(std::vector<std::string> & v);
+    Call(std::vector<std::string> & v, std::string f_name = "");
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
   class Return: public Instance {
   public:
     Return(std::vector<std::string> & v);
     std::string toString();
+    std::string toL2(std::string f_name);
   };
 
 

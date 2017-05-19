@@ -1,4 +1,4 @@
-// By Zhiping
+// By: Zhiping
 
 #include <L3.h>
 
@@ -35,7 +35,7 @@ namespace L3 {
     }
   }
 
-  Var::Var(std::string name) {
+  Var::Var(std::string name, std::string filename) {
     if (name[0] == ':') {
       this->type = L3::INS::LABEL;
     } else {
@@ -46,12 +46,17 @@ namespace L3 {
         this->type = L3::INS::VAR;
       }
     }
+
     this->name = name;
+
+    if (this->type == L3::INS::LABEL) {
+      this->name += filename;
+    }
   }
 
   std::string Var::toString() {
     std::string res;
-    if (this->instances.size() == 1 && typeid(*this->instances[0]) == typeid(L3::Op)) {
+    if ((this->instances.size() == 1) && (typeid(*(this->instances[0])) == typeid(L3::Op))) {
       if (this->name == this->instances[0]->instances[0]->name) {
         res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[1]->name + ")";
       } else if (this->name == this->instances[0]->instances[1]->name) {
@@ -71,6 +76,37 @@ namespace L3 {
       this->instances.push_back(new L3::Var(v[1]));
       this->instances.push_back(new L3::Var(v[2]));
     }
+  }
+
+  std::string Br::toL2(std::string f_name) {
+    std::string res = "\n\t\t";
+
+    if (this->instances.size() == 3) {
+      this->instances[1]->name += "_" + f_name;
+      this->instances[2]->name += "_" + f_name;
+      L3::Instance * cmp = this->instances[0]->instances[0];
+      if (cmp->name == ">=" || cmp->name == ">" || cmp->name == "=" || cmp->name == "<" || cmp->name == "<=") {
+        if (cmp->name == ">=" || cmp->name == ">") {
+          if (cmp->name == ">=") {
+            cmp->name = "<=";
+          } else {
+            cmp->name = "<";
+          }
+          res += "\n\t\t(cjump " + cmp->instances[1]->name + " " + cmp->name + " " + cmp->instances[0]->name + " " + this->instances[1]->name + " " + this->instances[2]->name + ")";
+        } else {
+          res += "\n\t\t(cjump " + cmp->instances[0]->name + " " + cmp->name + " " + cmp->instances[1]->name + " " + this->instances[1]->name + " " + this->instances[2]->name + ")";
+        }
+      } else {
+        res += this->instances[0]->toString();
+        res += "\n\t\t(cjump 0 < " + this->instances[0]->name + " " + this->instances[1]->name + " " + this->instances[2]->name + ")";
+      }
+
+    } else {
+      // if (this->instances[0]->name )
+      this->instances[0]->name += "_" + f_name;
+      res += "(goto " + this->instances[0]->name + ")";
+    }
+    return res;
   }
 
   std::string Br::toString() {
@@ -99,9 +135,9 @@ namespace L3 {
     return res;
   }
 
-  Store::Store(std::vector<std::string> & v) {
+  Store::Store(std::vector<std::string> & v, std::string f_name) {
     this->instances.push_back(new L3::Var(v[0]));
-    this->instances.push_back(new L3::Var(v[1]));
+    this->instances.push_back(new L3::Var(v[1], f_name));
   }
 
   std::string Store::toString() {
@@ -129,10 +165,10 @@ namespace L3 {
     return "";
   }
 
-  Call::Call(std::vector<std::string> & v) {
+  Call::Call(std::vector<std::string> & v, std::string f_name) {
     this->name = v[0];
     for (int k = 1; k < v.size(); k++) {
-      this->instances.push_back(new L3::Var(v[k]));
+      this->instances.push_back(new L3::Var(v[k], f_name));
     }
   }
 
@@ -187,5 +223,24 @@ namespace L3 {
     }
     res += "(return)";
     return res;
+  }
+
+  std::string Var::toL2(std::string f_name){
+    return "";
+  }
+  std::string Store::toL2(std::string f_name){
+    return "";
+  }
+  std::string Op::toL2(std::string f_name){
+    return "";
+  }
+  std::string Call::toL2(std::string f_name){
+    return "";
+  }
+  std::string Load::toL2(std::string f_name){
+    return "";
+  }
+  std::string Return::toL2(std::string f_name){
+    return "";
   }
 }

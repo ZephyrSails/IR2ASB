@@ -7,7 +7,6 @@ namespace L3 {
   L3::Tile::Tile() {
     std::vector< std::string > v;
     // return t || return
-    // static
     v = {"VAR"};
     this->tiles[TNAME::RETURN] = new L3::Return(v);
     // var <- s
@@ -48,7 +47,7 @@ namespace L3 {
     this->tiles[TNAME::ADD_STORE]->instances[0]->instances.push_back(new L3::Op(v));
   }
 
-  std::string L3::Tile::Translate(int tIndex, L3::Instance * ins) {
+  std::string L3::Tile::Translate(int tIndex, L3::Instance * ins, std::string f_name) {
     std::string res = "";
     // return "";
     L3::Instance * tile = this->tiles[tIndex];
@@ -69,13 +68,17 @@ namespace L3 {
                 return ins->toString();
 
       case TNAME::C_BR:
-                return ins->toString();
+                // L3::Br * br_ins;
+                // br_ins = dynamic_cast<L3::Br*>(ins);
+                return ins->toL2(f_name);
+                // return ins->toString();
 
       case TNAME::LABEL:
-                return "\n\t\t" + ins->name;
+                return "\n\t\t" + ins->name + "_" + f_name;
 
       case TNAME::BR:
-                return ins->toString();
+                return ins->toL2(f_name);
+                // return ins->toString();
 
       case TNAME::STORE:
                 return ins->toString();

@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
   outputFile << "(:main\n";
 
   for (auto f : p.functions) {
-    outputFile << "\t(" << f->name << "\n";
+    outputFile << "\t(:" << f->name << "\n";
     outputFile << "\t\t" << std::to_string(f->arguments.size()) << " 0";
 
     for (int k = 0; k < f->arguments.size(); k++) {
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
     L3::printFunc(*f);
 
     std::string f_name = f->name;
-    f_name.erase(0, 1);
+    // f_name.erase(0, 1);
 
     for (auto i : f->instructions) {
 
@@ -63,11 +63,10 @@ int main(int argc, char **argv) {
       t->Match(i, stack);
 
       for (int k = stack.size()-1; k >= 0; k--) {
-        outputFile << t->Translate(std::get<0>(stack.at(k)), std::get<1>(stack.at(k)));
-        if (std::get<0>(stack.at(k)) == t->TNAME::LABEL) {
-
-          outputFile << "_" << f_name;
-        }
+        outputFile << t->Translate(std::get<0>(stack.at(k)), std::get<1>(stack.at(k)), f_name);
+        // if (std::get<0>(stack.at(k)) == t->TNAME::LABEL) {
+        //   outputFile << "_" << f_name;
+        // }
       }
 
     }
