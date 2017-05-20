@@ -19,3 +19,7 @@ L3/prog.L2
 IR/bin/*
 IR/obj/*
 IR/prog.L3
+
+LA/bin/*
+LA/obj/*
+LA/prog.IR

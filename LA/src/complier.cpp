@@ -23,9 +23,7 @@ int main(int argc, char **argv) {
   }
 
   std::ofstream outputFile;
-  outputFile.open("prog.L3");
-
-  // LA::Tile * t = new LA::Tile();
+  outputFile.open("prog.IR");
 
   LA::Program p = LA::LA_parse_file(argv[optind]);
 
