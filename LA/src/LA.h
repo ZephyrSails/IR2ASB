@@ -61,16 +61,16 @@ namespace LA {
     std::vector< LA::Var * > vars;
 
     virtual void toIR(std::ofstream &outputFile, LA::Function * currF) = 0;
-    virtual std::vector<std::string> toEncode() = 0;
-    virtual std::vector<std::string> toDecode() = 0;
+    virtual std::vector<LA::Var *> toEncode() = 0;
+    virtual std::vector<LA::Var *> toDecode() = 0;
   };
 
   class InsBr: public Instruction {
   public:
     InsBr(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
 
   };
 
@@ -78,72 +78,72 @@ namespace LA {
   public:
     InsReturn(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsLength: public Instruction {
   public:
     InsLength(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsAssignCall: public Instruction {
   public:
     InsAssignCall(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsAssign: public Instruction {
   public:
     InsAssign(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsOpAssign: public Instruction {
   public:
     InsOpAssign(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsType: public Instruction {
   public:
     InsType(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsCall: public Instruction {
   public:
     InsCall(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsNewArray: public Instruction {
   public:
     InsNewArray(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   class InsNewTuple: public Instruction {
   public:
     InsNewTuple(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
-    std::vector<std::string> toEncode();
-    std::vector<std::string> toDecode();
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
   };
 
   struct Function {
