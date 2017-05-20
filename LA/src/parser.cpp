@@ -313,6 +313,7 @@ namespace LA {
   struct LA_instruction:
     pegtl::sor<
       // ins_new,
+      ins_label,
       ins_br_start,
       ins_return,
       ins_call,
@@ -388,10 +389,10 @@ namespace LA {
 
   void insert(std::set<std::string> & s, std::string var) {
 
-    for (auto reg : s)
-    {
-        std::cout << reg << " ";
-    }
+    // for (auto reg : s)
+    // {
+    //     std::cout << reg << " ";
+    // }
 
     if (var[0] == ':') {
       return;
@@ -437,11 +438,11 @@ namespace LA {
   template<> struct action < args > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      std::cout << "v.size(): " << v.size() << "\n";
+      // std::cout << "v.size(): " << v.size() << "\n";
 
 
       for (int k = 0; k < v.size(); k += 2) {
-        std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
+        // std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
         currF->arguments.push_back(new LA::Var(v[k], v[k+1]));
 
         currF->type_map[v[k+1]] = new LA::Type(v[k]);
@@ -453,7 +454,7 @@ namespace LA {
 
   template<> struct action < type_var > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
-      std::cout << "type_var: " << in.string() << "\n";
+      // std::cout << "type_var: " << in.string() << "\n";
       // v.clear();
     }
   };
@@ -461,10 +462,9 @@ namespace LA {
   template<> struct action < ins_call > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      LA::BasicBlock *currBB = currF->bbs.back();
       LA::Instruction *newIns = new LA::InsCall(v);
 
-      currBB->inss.push_back(newIns);
+      currF->inss.push_back(newIns);
       v.clear();
     }
   };
@@ -472,12 +472,11 @@ namespace LA {
   template<> struct action < ins_type > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      LA::BasicBlock *currBB = currF->bbs.back();
       LA::Instruction *newIns = new LA::InsType(v);
 
       currF->type_map[v[1]] = new LA::Type(v[0]);
 
-      currBB->inss.push_back(newIns);
+      currF->inss.push_back(newIns);
       v.clear();
     }
   };
@@ -485,10 +484,9 @@ namespace LA {
   template<> struct action < ins_v_start > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      LA::BasicBlock *currBB = currF->bbs.back();
       LA::Instruction *newIns;
 
-      std::cout << "busErr: v.size(): " << v.size() << "\n";
+      // std::cout << "busErr: v.size(): " << v.size() << "\n";
       if (v[1] == "length") {
         newIns = new LA::InsLength(v);
       } else if (v[1] == "new") {
@@ -501,14 +499,14 @@ namespace LA {
         else if (v[1] == "call") {
         newIns = new LA::InsAssignCall(v);
       } else if (v.size() == 2) {
-        std::cout << "busErr: probe1\n";
+        // std::cout << "busErr: probe1\n";
         newIns = new LA::InsAssign(v);
       } else if (v.size() == 4){
         // std::cout << "busErr \n";
         newIns = new LA::InsOpAssign(v);
       }
 
-      currBB->inss.push_back(newIns);
+      currF->inss.push_back(newIns);
       v.clear();
     }
   };
@@ -516,10 +514,9 @@ namespace LA {
   template<> struct action < ins_br_start > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      LA::BasicBlock *currBB = currF->bbs.back();
       LA::Instruction *newIns = new LA::InsBr(v);
 
-      currBB->te = newIns;
+      currF->inss.push_back(newIns);
 
       v.clear();
     }
@@ -528,10 +525,9 @@ namespace LA {
   template<> struct action < ins_return > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      LA::BasicBlock *currBB = currF->bbs.back();
       LA::Instruction *newIns = new LA::InsReturn(v);
 
-      currBB->te = newIns;
+      currF->inss.push_back(newIns);
 
       v.clear();
     }

@@ -29,8 +29,6 @@ int main(int argc, char **argv) {
 
   LA::Program p = LA::LA_parse_file(argv[optind]);
 
-  // outputFile << "(:main\n";
-
   for (auto f : p.functions) {
     outputFile << "define " << f->name << " ( ";
     if (f->arguments.size() > 0) {
@@ -43,13 +41,8 @@ int main(int argc, char **argv) {
 
     outputFile << " ) {";
 
-    for (auto bb : f->bbs) {
-      outputFile << "\n\t" << bb->label;
-      for (auto ins : bb->inss) {
-        ins->toL3(outputFile, f);
-        // outputFile << "\n\t" << ins->toString();
-      }
-      bb->te->toL3(outputFile, f);
+    for (auto ins : f->inss) {
+      ins->toIR(outputFile, f);
     }
 
     outputFile << "\n}\n";
@@ -57,6 +50,5 @@ int main(int argc, char **argv) {
 
   outputFile.close();
 
-  std::cout << "yeahhhhh\n";
-  // LA::debug("yeahhhhh");
+  std::cout << "yeahhhhh LA\n";
 }

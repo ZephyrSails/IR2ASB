@@ -406,10 +406,10 @@ namespace IR {
 
   void insert(std::set<std::string> & s, std::string var) {
 
-    for (auto reg : s)
-    {
-        std::cout << reg << " ";
-    }
+    // for (auto reg : s)
+    // {
+    //     std::cout << reg << " ";
+    // }
 
     if (var[0] == ':') {
       return;
@@ -466,11 +466,11 @@ namespace IR {
   template<> struct action < args > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
       IR::Function *currF = p.functions.back();
-      std::cout << "v.size(): " << v.size() << "\n";
+      // std::cout << "v.size(): " << v.size() << "\n";
 
 
       for (int k = 0; k < v.size(); k += 2) {
-        std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
+        // std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
         currF->arguments.push_back(new IR::Var(v[k], v[k+1]));
 
         currF->type_map[v[k+1]] = new IR::Type(v[k]);
@@ -482,7 +482,7 @@ namespace IR {
 
   template<> struct action < type_var > {
     static void apply( const pegtl::input & in, IR::Program & p, std::vector<std::string> & v ) {
-      std::cout << "type_var: " << in.string() << "\n";
+      // std::cout << "type_var: " << in.string() << "\n";
       // v.clear();
     }
   };
@@ -517,7 +517,7 @@ namespace IR {
       IR::BasicBlock *currBB = currF->bbs.back();
       IR::Instruction *newIns;
 
-      std::cout << "busErr: v.size(): " << v.size() << "\n";
+      // std::cout << "busErr: v.size(): " << v.size() << "\n";
       if (v[1] == "length") {
         newIns = new IR::InsLength(v);
       } else if (v[1] == "new") {
@@ -530,7 +530,7 @@ namespace IR {
         else if (v[1] == "call") {
         newIns = new IR::InsAssignCall(v);
       } else if (v.size() == 2) {
-        std::cout << "busErr: probe1\n";
+        // std::cout << "busErr: probe1\n";
         newIns = new IR::InsAssign(v);
       } else if (v.size() == 4){
         // std::cout << "busErr \n";

@@ -121,19 +121,19 @@ namespace IR {
   IR::InsAssign::InsAssign(std::vector<std::string> & v) {
     IR::Var* var;
     if (v[0].find("[") != std::string::npos) {
-      std::cout << "probe 1\n";
+      // std::cout << "probe 1\n";
       var = new IR::Var(v[0], true);
     } else {
-      std::cout << "probe 11\n";
+      // std::cout << "probe 11\n";
       var = new IR::Var(v[0]);
     }
     this->vars.push_back(var);
 
     if (v[1].find("[") != std::string::npos) {
-      std::cout << "probe 2\n";
+      // std::cout << "probe 2\n";
       var = new IR::Var(v[1], true);
     } else {
-      std::cout << "probe 2\n";
+      // std::cout << "probe 2\n";
       var = new IR::Var(v[1]);
     }
     this->vars.push_back(var);
@@ -274,7 +274,7 @@ namespace IR {
     int d = this->ts.size();
     std::string suffix = std::to_string(rand());
 
-    std::cout << "this->name: " << this->name << " currF->type_map[this->name]->type: " << currF->type_map[this->name]->type << "\n";
+    // std::cout << "this->name: " << this->name << " currF->type_map[this->name]->type: " << currF->type_map[this->name]->type << "\n";
     if (currF->type_map[this->name]->type == IR::TYPE::TUPLE) {
       o << "\n\taddr_" << suffix << " <- " << this->toString() << " + " << (std::stoll(this->ts[0]->name) * 8) + 8;
     } else {
