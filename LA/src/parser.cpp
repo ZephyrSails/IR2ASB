@@ -469,6 +469,18 @@ namespace LA {
     }
   };
 
+  template<> struct action < ins_label > {
+    static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
+      LA::Function *currF = p.functions.back();
+      LA::Instruction *newIns = new LA::InsLabel(v);
+
+      // currF->type_map[v[1]] = new LA::Type(v[0]);
+
+      currF->inss.push_back(newIns);
+      v.clear();
+    }
+  };
+
   template<> struct action < ins_type > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();

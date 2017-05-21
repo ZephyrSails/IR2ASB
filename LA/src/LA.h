@@ -28,19 +28,22 @@ namespace LA {
 
   void debug(std::string str);
 
+  const std::string DECODE = "_DECODE";
+
   const std::vector< std::string > ARGS = { "rdi", "rsi", "rdx", "rcx", "r8", "r9" };
   const std::set< std::string > LIBS = { "allocate", "print", "array-error" };
 
-  enum INS { VAR, N, LABEL, ELSE };
+  // enum INS { VAR, N, LABEL, ELSE };
 
-  enum TYPE { VOID, TUPLE, CODE, INT };
+  enum TYPE { VOID, TUPLE, CODE, INT, VAR, N, LABEL };
 
   class Type {
   public:
     int64_t type;
     int64_t arr_count;
 
-    Type(std::string t);
+    Type(std::string t, bool notArray=false);
+    std::string toString();
   };
 
   struct Function;
@@ -51,7 +54,7 @@ namespace LA {
     LA::Type * type;  // include how many [] are there?
     std::vector< LA::Var * > ts;
     Var(std::string t, std::string n);
-    Var(std::string & n, bool hasT=false);
+    Var(std::string & n, bool hasT=false,  bool avoidEncode=false);
     std::string toString();
   };
 
@@ -63,6 +66,8 @@ namespace LA {
     virtual void toIR(std::ofstream &outputFile, LA::Function * currF) = 0;
     virtual std::vector<LA::Var *> toEncode() = 0;
     virtual std::vector<LA::Var *> toDecode() = 0;
+    void encode(std::ofstream &o);
+    void decode(std::ofstream &o);
   };
 
   class InsBr: public Instruction {
@@ -71,7 +76,6 @@ namespace LA {
     void toIR(std::ofstream &outputFile, LA::Function * currF);
     std::vector<LA::Var *> toEncode();
     std::vector<LA::Var *> toDecode();
-
   };
 
   class InsReturn: public Instruction {
@@ -141,6 +145,14 @@ namespace LA {
   class InsNewTuple: public Instruction {
   public:
     InsNewTuple(std::vector<std::string> & v);
+    void toIR(std::ofstream &outputFile, LA::Function * currF);
+    std::vector<LA::Var *> toEncode();
+    std::vector<LA::Var *> toDecode();
+  };
+
+  class InsLabel: public Instruction {
+  public:
+    InsLabel(std::vector<std::string> & v);
     void toIR(std::ofstream &outputFile, LA::Function * currF);
     std::vector<LA::Var *> toEncode();
     std::vector<LA::Var *> toDecode();

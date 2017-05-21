@@ -1,6 +1,36 @@
 #include <LA.h>
 #include <parser.h>
 
+LA::Function* genBB(LA::Function* f) {
+  LA::Function* fbb = new LA::Function();
+  // int k = 0;
+  bool startBB = true;
+  int genLabelCount = 0;
+
+  for (int k = 0; k < f->inss.size(); k++) {
+    if (startBB) {
+      if (typeid(*f->inss[k]) != typeid(LA::InsLabel)) {
+        std::vector<std::string> v;
+        v.push_back(":" + f->name + "_LAGEN_" + std::to_string(genLabelCount));
+        genLabelCount += 1;
+        LA::Instruction* g = new LA::InsLabel(v);
+        fbb->inss.push_back(g);
+      }
+      startBB = false;
+    } else if (typeid(*f->inss[k]) == typeid(LA::InsLabel)) {
+      std::vector<std::string> v;
+      v.push_back(f->inss[k]->vars[0]->toString());
+      LA::Instruction* g = new LA::InsBr(v);
+      fbb->inss.push_back(g);
+    }
+    fbb->inss.push_back(f->inss[k]);
+    if (typeid(f->inss[k]) == typeid(LA::InsBr) || typeid(f->inss[k]) == typeid(LA::InsReturn)) {
+      startBB = true;
+    }
+  }
+  return fbb;
+}
+
 int main(int argc, char **argv) {
   bool verbose;
 
@@ -28,7 +58,7 @@ int main(int argc, char **argv) {
   LA::Program p = LA::LA_parse_file(argv[optind]);
 
   for (auto f : p.functions) {
-    outputFile << "define " << f->name << " ( ";
+    outputFile << "define :" << f->name << " ( ";
     if (f->arguments.size() > 0) {
       outputFile << f->arguments[0]->toString();
     }
@@ -39,7 +69,10 @@ int main(int argc, char **argv) {
 
     outputFile << " ) {";
 
-    for (auto ins : f->inss) {
+    // for (auto ins : f->inss) {
+    //   ins->toIR(outputFile, f);
+    // }
+    for (auto ins : genBB(f)->inss) {
       ins->toIR(outputFile, f);
     }
 
