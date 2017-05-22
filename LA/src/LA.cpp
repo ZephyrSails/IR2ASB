@@ -5,7 +5,7 @@
 namespace LA {
 
   LA::Type::Type(std::string t, bool notArray) {
-    if (notArray == false) {
+    if (notArray == true) {
       switch (t[0]) {
         case '%':
           this->type = LA::TYPE::VAR;
@@ -38,6 +38,7 @@ namespace LA {
 
   std::string LA::Type::toString() {
     std::string res;
+    std::cout << "this->type: " << this->type << "\n";
     switch (this->type) {
       case LA::TYPE::TUPLE:
         res += "tuple";
@@ -47,6 +48,9 @@ namespace LA {
         for (int k = 0; k < this->arr_count; k++) {
           res += "[]";
         }
+        break;
+      case LA::TYPE::VOID:
+        res += "void";
         break;
       case LA::TYPE::CODE:
         res += "code";
@@ -167,8 +171,13 @@ namespace LA {
 
   LA::InsOpAssign::InsOpAssign(std::vector<std::string> & v) {
     // vars[0] <- vars[1] vars[2] vars[3]
+    LA::Var* var;
     for (int k = 0; k < v.size(); k++) {
-      LA::Var* var = new LA::Var(v[k]);
+      if (k == 2) {
+        var = new LA::Var(v[k], false, true);
+      } else {
+        var = new LA::Var(v[k]);
+      }
       this->vars.push_back(var);
     }
   }
@@ -212,7 +221,10 @@ namespace LA {
 
   LA::InsCall::InsCall(std::vector<std::string> & v) {
     // call vars[0](vars[1].. vars[n])
-    for (int k = 1; k < v.size(); k++) {
+    LA::Var* var = new LA::Var(v[1], false, true);
+    this->vars.push_back(var);
+
+    for (int k = 2; k < v.size(); k++) {
       LA::Var* var = new LA::Var(v[k]);
       this->vars.push_back(var);
     }
@@ -256,7 +268,8 @@ namespace LA {
   }
 
   void LA::InsAssign::toIR(std::ofstream &o, LA::Function * currF) {
-
+    this->decode(o);
+    o << "\n\t" << this->vars[0]->toString() << " <- " << this->vars[1]->toString();
   }
 
   std::vector<LA::Var *> LA::InsAssign::toEncode() {
@@ -402,7 +415,7 @@ namespace LA {
       }
     } else {
       if (!avoidEncode && str[0] != ':' && str[0] != '%') {
-        this->name = std::to_string((std::stoll(this->name) << 1) + 1);
+        this->name = std::to_string((std::stoll(str) << 1) + 1);
       } else {
         this->name = str;
       }

@@ -24,7 +24,7 @@ LA::Function* genBB(LA::Function* f) {
       fbb->inss.push_back(g);
     }
     fbb->inss.push_back(f->inss[k]);
-    if (typeid(f->inss[k]) == typeid(LA::InsBr) || typeid(f->inss[k]) == typeid(LA::InsReturn)) {
+    if (typeid(*f->inss[k]) == typeid(LA::InsBr) || typeid(*f->inss[k]) == typeid(LA::InsReturn)) {
       startBB = true;
     }
   }
@@ -58,7 +58,7 @@ int main(int argc, char **argv) {
   LA::Program p = LA::LA_parse_file(argv[optind]);
 
   for (auto f : p.functions) {
-    outputFile << "define :" << f->name << " ( ";
+    outputFile << "define " << f->ret_type->toString() << " :" << f->name << " ( ";
     if (f->arguments.size() > 0) {
       outputFile << f->arguments[0]->toString();
     }

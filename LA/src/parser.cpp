@@ -271,7 +271,9 @@ namespace LA {
     > {};
 
   struct ins_label:
-    label {};
+    pegtl::seq<
+      label
+    > {};
 
   struct ins_return:
     pegtl::sor<
@@ -292,8 +294,6 @@ namespace LA {
       seps,
       var
     > {};
-
-
 
   // struct ins_new:
   //   pegtl::seq<
@@ -391,7 +391,6 @@ namespace LA {
 
     // for (auto reg : s)
     // {
-    //     std::cout << reg << " ";
     // }
 
     if (var[0] == ':') {
@@ -438,11 +437,9 @@ namespace LA {
   template<> struct action < args > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
-      // std::cout << "v.size(): " << v.size() << "\n";
 
 
       for (int k = 0; k < v.size(); k += 2) {
-        // std::cout << "v[" << k << "]: " << v[k] << " k+1: " << v[k+1] << "\n";
         currF->arguments.push_back(new LA::Var(v[k], v[k+1]));
 
         currF->type_map[v[k+1]] = new LA::Type(v[k]);
@@ -452,12 +449,11 @@ namespace LA {
     }
   };
 
-  template<> struct action < type_var > {
-    static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
-      // std::cout << "type_var: " << in.string() << "\n";
-      // v.clear();
-    }
-  };
+  // template<> struct action < type_var > {
+  //   static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
+  //     v.clear();
+  //   }
+  // };
 
   template<> struct action < ins_call > {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
@@ -473,9 +469,6 @@ namespace LA {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
       LA::Instruction *newIns = new LA::InsLabel(v);
-
-      // currF->type_map[v[1]] = new LA::Type(v[0]);
-
       currF->inss.push_back(newIns);
       v.clear();
     }
@@ -498,7 +491,6 @@ namespace LA {
       LA::Function *currF = p.functions.back();
       LA::Instruction *newIns;
 
-      // std::cout << "busErr: v.size(): " << v.size() << "\n";
       if (v[1] == "length") {
         newIns = new LA::InsLength(v);
       } else if (v[1] == "new") {
@@ -511,10 +503,8 @@ namespace LA {
         else if (v[1] == "call") {
         newIns = new LA::InsAssignCall(v);
       } else if (v.size() == 2) {
-        // std::cout << "busErr: probe1\n";
         newIns = new LA::InsAssign(v);
       } else if (v.size() == 4){
-        // std::cout << "busErr \n";
         newIns = new LA::InsOpAssign(v);
       }
 
@@ -529,7 +519,6 @@ namespace LA {
       LA::Instruction *newIns = new LA::InsBr(v);
 
       currF->inss.push_back(newIns);
-
       v.clear();
     }
   };
@@ -542,6 +531,7 @@ namespace LA {
       currF->inss.push_back(newIns);
 
       v.clear();
+
     }
   };
 
