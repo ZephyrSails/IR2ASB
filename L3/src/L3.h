@@ -29,6 +29,7 @@ namespace L3 {
 
   const std::vector< std::string > ARGS = { "rdi", "rsi", "rdx", "rcx", "r8", "r9" };
   const std::set< std::string > LIBS = { "allocate", "print", "array-error" };
+  const std::set< std::string > OP = { "+", "-", "*", "&", "<<", ">>" };
   // std::set< std::string > F_NAME = {};
 
   enum INS { VAR, N, LABEL, ELSE };

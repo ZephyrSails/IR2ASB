@@ -121,19 +121,15 @@ namespace IR {
   IR::InsAssign::InsAssign(std::vector<std::string> & v) {
     IR::Var* var;
     if (v[0].find("[") != std::string::npos) {
-      // std::cout << "probe 1\n";
       var = new IR::Var(v[0], true);
     } else {
-      // std::cout << "probe 11\n";
       var = new IR::Var(v[0]);
     }
     this->vars.push_back(var);
 
     if (v[1].find("[") != std::string::npos) {
-      // std::cout << "probe 2\n";
       var = new IR::Var(v[1], true);
     } else {
-      // std::cout << "probe 2\n";
       var = new IR::Var(v[1]);
     }
     this->vars.push_back(var);

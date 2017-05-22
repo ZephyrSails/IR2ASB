@@ -57,13 +57,37 @@ namespace L3 {
   std::string Var::toString() {
     std::string res;
     if ((this->instances.size() == 1) && (typeid(*(this->instances[0])) == typeid(L3::Op))) {
-      if (this->name == this->instances[0]->instances[0]->name && this->instances[0]->name != "-") {
-        res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[1]->name + ")";
-      } else if (this->name == this->instances[0]->instances[1]->name && this->instances[0]->name != "-") {
-        res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[0]->name + ")";
-      } else {
-        res += "\n\t\t(" + this->name + " <- " + this->instances[0]->instances[0]->name + ")";
-        res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[1]->name + ")";
+      if (L3::OP.count(this->instances[0]->name)) {
+        if (this->name == this->instances[0]->instances[0]->name && this->instances[0]->name != "-") {
+          res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[1]->name + ")";
+        } else if (this->name == this->instances[0]->instances[1]->name && this->instances[0]->name != "-") {
+          res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[0]->name + ")";
+        } else {
+          res += "\n\t\t(" + this->name + " <- " + this->instances[0]->instances[0]->name + ")";
+          res += "\n\t\t(" + this->name + " " + this->instances[0]->name + "= " + this->instances[0]->instances[1]->name + ")";
+        }
+      } else { // cmp
+        std::string suffix = std::to_string(rand());
+        std::string cmp;
+        bool switched;
+        if (this->instances[0]->name == ">=" || this->instances[0]->name == ">") {
+          if (this->instances[0]->name == ">=") {
+            cmp = " <= ";
+          } else {
+            cmp = " < ";
+          }
+          switched = true;
+        }
+        res += "\n\t\t(" + this->name + " <- 0)";
+        if (switched) {
+          res += "\n\t\t(cjump " + this->instances[0]->instances[1]->name + cmp + this->instances[0]->instances[0]->name + " :true_"  + suffix + " :false_" + suffix + ")";
+        } else {
+          res += "\n\t\t(cjump " + this->instances[0]->instances[0]->name + cmp + this->instances[0]->instances[1]->name + " :true_"  + suffix + " :false_" + suffix + ")";
+        }
+
+        res += "\n\t\t:true_" + suffix;
+        res += "\n\t\t(" + this->name + " <- 1)";
+        res += "\n\t\t:false_" + suffix;
       }
       return res;
     }
@@ -80,7 +104,6 @@ namespace L3 {
 
   std::string Br::toL2(std::string f_name) {
     std::string res = "\n\t\t";
-
     if (this->instances.size() == 3) {
       this->instances[1]->name += "_" + f_name;
       this->instances[2]->name += "_" + f_name;
@@ -100,7 +123,6 @@ namespace L3 {
         res += this->instances[0]->toString();
         res += "\n\t\t(cjump 0 < " + this->instances[0]->name + " " + this->instances[1]->name + " " + this->instances[2]->name + ")";
       }
-
     } else {
       // if (this->instances[0]->name )
       this->instances[0]->name += "_" + f_name;
@@ -154,13 +176,6 @@ namespace L3 {
   }
 
   std::string Op::toString() {
-    // std::string res = "\n\t\t";
-    //
-    // if (false) { // is cmp
-    //
-    // } else { // op
-    //   res += "(" +
-    // }
 
     return "";
   }
@@ -225,22 +240,22 @@ namespace L3 {
     return res;
   }
 
-  std::string Var::toL2(std::string f_name){
+  std::string Var::toL2(std::string f_name) {
     return "";
   }
-  std::string Store::toL2(std::string f_name){
+  std::string Store::toL2(std::string f_name) {
     return "";
   }
-  std::string Op::toL2(std::string f_name){
+  std::string Op::toL2(std::string f_name) {
     return "";
   }
-  std::string Call::toL2(std::string f_name){
+  std::string Call::toL2(std::string f_name) {
     return "";
   }
-  std::string Load::toL2(std::string f_name){
+  std::string Load::toL2(std::string f_name) {
     return "";
   }
-  std::string Return::toL2(std::string f_name){
+  std::string Return::toL2(std::string f_name) {
     return "";
   }
 }

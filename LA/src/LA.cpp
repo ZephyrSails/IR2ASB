@@ -422,6 +422,4 @@ namespace LA {
       this->type = new LA::Type(this->name, true);
     }
   }
-
-
 }
