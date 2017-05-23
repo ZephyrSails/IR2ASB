@@ -159,7 +159,7 @@ namespace LA {
   }
 
   void LA::InsAssignCall::toIR(std::ofstream &o, LA::Function * currF) {
-    if (LA::FUNCS.count(this->vars[1]->toString())) {
+    if (LA::Program::FUNCS.count(this->vars[1]->toString())) {
       o << "\n\t" << this->vars[0]->toString() << " <- call :" << this->vars[1]->toString() << "(";
     } else {
       o << "\n\t" << this->vars[0]->toString() << " <- call " << this->vars[1]->toString() << "(";

@@ -25,7 +25,6 @@
 #include <regex>
 
 namespace LA {
-  std::set<std::string> FUNCS;
 
   void debug(std::string str);
 
@@ -167,9 +166,13 @@ namespace LA {
     std::vector< LA::Instruction * > inss;
   };
 
-  struct Program {
+  class Program {
+  public:
+    static std::set<std::string> FUNCS;
     std::vector< LA::Function * > functions;
   };
+  
+  std::set<std::string> LA::Program::FUNCS = {};
 
   void printFunc(LA::Function & func);
 }

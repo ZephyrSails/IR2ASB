@@ -1,4 +1,5 @@
-#include <LA.h>
+// by Zhiping
+
 #include <parser.h>
 
 LA::Function* genBB(LA::Function* f) {
@@ -52,6 +53,7 @@ int main(int argc, char **argv) {
     }
   }
 
+  
   std::ofstream outputFile;
   outputFile.open("prog.IR");
 

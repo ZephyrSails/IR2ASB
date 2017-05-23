@@ -1,9 +1,5 @@
 // by: Zhiping
 
-// #include <LA.h>
-#include <pegtl.hh>
-#include <pegtl/analyze.hh>
-#include <pegtl/contrib/raw_string.hh>
 #include <parser.h>
 
 using namespace pegtl;
@@ -429,7 +425,7 @@ namespace LA {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
       currF->name = in.string();
-      LA::FUNCS.insert(in.string());
+      LA::Program::FUNCS.insert(in.string());
       v.clear();
     }
   };
@@ -627,9 +623,11 @@ namespace LA {
      * Check the grammar for some possible issues.
      */
     pegtl::analyze< LA::LA_grammer >();
+
     /*
      * Parse.
      */
+    
     LA::Program p;
     // LA::Instruction ti; // temp instruction
     std::vector< std::string > v;

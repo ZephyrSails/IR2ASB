@@ -2,6 +2,9 @@
 
 #pragma once
 
+#include <pegtl.hh>
+#include <pegtl/analyze.hh>
+#include <pegtl/contrib/raw_string.hh>
 #include <LA.h>
 
 namespace LA {
