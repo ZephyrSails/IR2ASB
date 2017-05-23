@@ -322,9 +322,9 @@ namespace LA {
     // vars[0] <- length vars[1] vars[2]
     LA::Var* var = new LA::Var(v[0]);
     this->vars.push_back(var);
-    var = new LA::Var(v[1]);
+    var = new LA::Var(v[2]);
     this->vars.push_back(var);
-    var = new LA::Var(v[2], false, true);
+    var = new LA::Var(v[3], false, true);
     this->vars.push_back(var);
   }
 
