@@ -300,10 +300,14 @@ namespace LA {
   std::vector<LA::Var *> LA::InsAssign::toDecode() {
     std::vector<LA::Var *> res;
     for (auto t : this->vars[0]->ts) {
-      res.push_back(t);
+      if (t->type->type != LA::TYPE::N) {
+        res.push_back(t);
+      }
     }
     for (auto t : this->vars[1]->ts) {
-      res.push_back(t);
+      if (t->type->type != LA::TYPE::N) {
+        res.push_back(t);
+      }
     }
     return res;
   }
@@ -412,7 +416,14 @@ namespace LA {
     // if (this->name[0] == '%') {
     //   return this->name.substr(1, this->name.size()-1);
     // }
-    return this->name;
+    std::string res = this->name;
+
+    for (auto t : this->ts) {
+      res += "[";
+      res += t->toString();
+      res += "]";
+    }
+    return res;
   }
 
   LA::Var::Var(std::string t, std::string n) {
