@@ -317,9 +317,9 @@ namespace LA {
 
       for (int j = 0; j < this->vars[checkID]->ts.size(); j++) {
         o << "\n\t%l_" << j << "_" << suffix << " <- length " << this->vars[checkID]->name << " " << j;
-
+        o << "\n\t%l_" << j << "_" << suffix << " <- " << "%l_" << j << "_" << suffix << " >> 1";
         o << "\n\t%validLen_" << j << "_" << suffix << " <- " << this->vars[checkID]->ts[j]->toString() << " < %l_" << j << "_" << suffix;
-        o << "\n\t%validLen_" << j << "_" << suffix << " <- " << "%validLen_" << j << "_" << suffix << " >> 1";
+
         o << "\n\tbr %validLen_" << j << "_" << suffix << " :validLen_" << j << "_" << suffix << " :invalidLen_" << j << "_"  << suffix;
         o << "\n\t:invalidLen_" << j << "_" << suffix;
         o << "\n\tcall array-error(" << this->vars[checkID]->name << ", " << this->vars[checkID]->ts[j]->toString() << ")";
