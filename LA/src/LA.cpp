@@ -295,6 +295,34 @@ namespace LA {
 
   void LA::InsAssign::toIR(std::ofstream &o, LA::Function * currF) {
     this->decode(o);
+    std::string suffix = std::to_string(rand());
+    bool allocChecked = false;
+    bool checkID;
+    for (int k = 0; k < 2; k++) {
+      if (this->vars[k]->ts.size() > 0) {
+        o << "\n\tbr " << this->vars[k]->name << " :alloc_" << suffix << " :notalloc_" << suffix;
+        checkID = k;
+        allocChecked = true;
+      }
+    }
+    if (allocChecked) {
+      o << "\n\t:notalloc_" << suffix;
+      o << "\n\tcall array-error(0, 0)";
+      o << "\n\tbr :alloc_" << suffix;
+      o << "\n\t:alloc_" << suffix;
+
+      for (int j = 0; j < this->vars[checkID]->ts.size(); j++) {
+        o << "\n\t%l_" << j << "_" << suffix << " <- length " << this->vars[checkID]->name << " " << j;
+
+        o << "\n\t%validLen_" << j << "_" << suffix << " <- " << this->vars[checkID]->ts[j]->toString() << " < %l_" << j << "_" << suffix;
+        o << "\n\tbr %validLen_" << j << "_" << suffix << " :validLen_" << j << "_" << suffix << " :invalidLen_" << j << "_"  << suffix;
+        o << "\n\t:invalidLen_" << j << "_" << suffix;
+        o << "\n\tcall array-error(" << this->vars[checkID]->name << ", " << this->vars[checkID]->ts[j]->toString() << ")";
+        o << "\n\tbr :validLen_" << j << "_" << suffix;
+        o << "\n\t:validLen_" << j << "_" << suffix;
+      }
+    }
+
     o << "\n\t" << this->vars[0]->toString() << " <- " << this->vars[1]->toString();
   }
 
