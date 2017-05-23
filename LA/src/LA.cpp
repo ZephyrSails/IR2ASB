@@ -225,6 +225,10 @@ namespace LA {
 
   void LA::InsType::toIR(std::ofstream &o, LA::Function * currF) {
     o << "\n\t" << this->vars[0]->type->toString() << " " << this->vars[0]->toString();
+
+    if (this->vars[0]->type->type == LA::TYPE::TUPLE || (this->vars[0]->type->type == LA::TYPE::INT && this->vars[0]->type->arr_count > 0)) {
+      o << "\n\t" << this->vars[0]->name << " <- 0";
+    }
   }
 
   std::vector<LA::Var *> LA::InsType::toEncode() {
