@@ -304,7 +304,7 @@ namespace LA {
     bool checkID;
     for (int k = 0; k < 2; k++) {
       if (this->vars[k]->ts.size() > 0) {
-        // o << "\n\tbr " << this->vars[k]->name << " :alloc_" << suffix << " :notalloc_" << suffix;
+        o << "\n\tbr " << this->vars[k]->name << " :alloc_" << suffix << " :notalloc_" << suffix;
         checkID = k;
         allocChecked = true;
       }
