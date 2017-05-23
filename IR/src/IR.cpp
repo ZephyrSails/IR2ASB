@@ -162,11 +162,19 @@ namespace IR {
 
   void IR::InsLength::toL3(std::ofstream &o, IR::Function * currF) {
     std::string suffix = std::to_string(rand());
-    o << "\n\taddr_" << suffix << " <- 8 * " << this->vars[2]->toString();
-    o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + 16";
-    o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + " << this->vars[1]->toString();
-    o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
-    o << "\n";
+
+    if (currF->type_map[this->vars[1]->name]->type == IR::TYPE::TUPLE) {
+      o << "\n\taddr_" << suffix << " <- " << this->vars[1]->toString();
+      o << "\n\taddr_" << suffix << " <- " << "addr_" << suffix << " << 1";
+      o << "\n\taddr_" << suffix << " <- " << "addr_" << suffix << " + 1";
+      o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
+    } else {
+      o << "\n\taddr_" << suffix << " <- 8 * " << this->vars[2]->toString();
+      o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + 16";
+      o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + " << this->vars[1]->toString();
+      o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
+      o << "\n";
+    }
   }
 
   IR::InsNewArray::InsNewArray(std::vector<std::string> & v) {
@@ -232,6 +240,9 @@ namespace IR {
   IR::Var::Var(std::string t, std::string n) {
     this->name = n;
     this->type = new IR::Type(t);
+    if (t[0] == 't') {
+
+    }
   }
 
   std::string IR::Var::toString() {
@@ -270,7 +281,6 @@ namespace IR {
     int d = this->ts.size();
     std::string suffix = std::to_string(rand());
 
-    // std::cout << "this->name: " << this->name << " currF->type_map[this->name]->type: " << currF->type_map[this->name]->type << "\n";
     if (currF->type_map[this->name]->type == IR::TYPE::TUPLE) {
       o << "\n\taddr_" << suffix << " <- " << this->toString() << " + " << (std::stoll(this->ts[0]->name) * 8) + 8;
     } else {
