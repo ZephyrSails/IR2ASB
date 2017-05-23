@@ -67,10 +67,15 @@ namespace LA {
   void LA::Instruction::decode(std::ofstream &o) {
     std::vector<LA::Var *> de;
     de = this->toDecode();
+    int count = 0;
     for (auto d : de) {
       if (d->type->type == LA::TYPE::VAR) {
         o << "\n\t" << d->toString() << LA::DECODE << " <- " << d->toString() << " >> 1";
         d->name += LA::DECODE;
+      } else if (d->type->type == LA::TYPE::N) {
+        o << "\n\t%tempN" << count << LA::DECODE << " <- " << d->toString() << " >> 1";
+        d->name = "%tempN" + std::to_string(count) + LA::DECODE;
+        count++;
       }
     }
   }
@@ -134,6 +139,7 @@ namespace LA {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsReturn::toDecode() {
     std::vector<LA::Var *> res;
     return res;
@@ -158,12 +164,13 @@ namespace LA {
       }
       o << ")";
     }
-
   }
+
   std::vector<LA::Var *> LA::InsAssignCall::toEncode() {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsAssignCall::toDecode() {
     std::vector<LA::Var *> res;
     return res;
@@ -188,18 +195,19 @@ namespace LA {
 
     this->encode(o);
   }
+
   std::vector<LA::Var *> LA::InsOpAssign::toEncode() {
     std::vector<LA::Var *> res;
     res.push_back(this->vars[0]);
     return res;
   }
+
   std::vector<LA::Var *> LA::InsOpAssign::toDecode() {
     std::vector<LA::Var *> res;
     res.push_back(this->vars[1]);
     res.push_back(this->vars[3]);
     return res;
   }
-
 
   LA::InsType::InsType(std::vector<std::string> & v) {
     // vars[0]->type vars[0]
@@ -210,10 +218,12 @@ namespace LA {
   void LA::InsType::toIR(std::ofstream &o, LA::Function * currF) {
     o << "\n\t" << this->vars[0]->type->toString() << " " << this->vars[0]->toString();
   }
+
   std::vector<LA::Var *> LA::InsType::toEncode() {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsType::toDecode() {
     std::vector<LA::Var *> res;
     return res;
@@ -240,10 +250,12 @@ namespace LA {
       o << ")";
     }
   }
+
   std::vector<LA::Var *> LA::InsCall::toEncode() {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsCall::toDecode() {
     std::vector<LA::Var *> res;
     return res;
@@ -353,10 +365,12 @@ namespace LA {
   void LA::InsNewTuple::toIR(std::ofstream &o, LA::Function * currF) {
     o << "\n\t" << this->vars[0]->toString() << " <- new Tuple(" << this->vars[1]->toString() << ")";
   }
+
   std::vector<LA::Var *> LA::InsNewTuple::toEncode() {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsNewTuple::toDecode() {
     std::vector<LA::Var *> res;
     return res;
@@ -376,6 +390,7 @@ namespace LA {
     std::vector<LA::Var *> res;
     return res;
   }
+
   std::vector<LA::Var *> LA::InsLabel::toDecode() {
     std::vector<LA::Var *> res;
     return res;
