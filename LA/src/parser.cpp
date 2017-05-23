@@ -627,7 +627,7 @@ namespace LA {
     /*
      * Parse.
      */
-    
+
     LA::Program p;
     // LA::Instruction ti; // temp instruction
     std::vector< std::string > v;

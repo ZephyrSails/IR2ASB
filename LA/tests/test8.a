@@ -5,7 +5,7 @@ void main ( ){
   %t <- call createMyClosure(3)
   %v <- call callMyClosure(%t, 4)
   call print(%v)
-  return 
+  return
 
 }
 
