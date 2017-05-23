@@ -3,6 +3,7 @@
 #include <LA.h>
 
 namespace LA {
+  std::set<std::string> LA::Program::FUNCS = {};
 
   LA::Type::Type(std::string t, bool notArray) {
     if (notArray == true) {

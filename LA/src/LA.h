@@ -171,8 +171,6 @@ namespace LA {
     static std::set<std::string> FUNCS;
     std::vector< LA::Function * > functions;
   };
-  
-  std::set<std::string> LA::Program::FUNCS = {};
 
   void printFunc(LA::Function & func);
 }
