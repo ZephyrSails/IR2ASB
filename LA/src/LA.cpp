@@ -310,8 +310,8 @@ namespace LA {
       }
     }
     if (allocChecked) {
-      // o << "\n\t:notalloc_" << suffix;
-      // o << "\n\tcall array-error(0, 0)";
+      o << "\n\t:notalloc_" << suffix;
+      o << "\n\tcall array-error(1, 1)";
       o << "\n\tbr :alloc_" << suffix;
       o << "\n\t:alloc_" << suffix;
 
