@@ -33,6 +33,8 @@ LA::Function* genBB(LA::Function* f) {
 }
 
 int main(int argc, char **argv) {
+  std::cout << "LA o7\n";
+
   bool verbose;
 
   /* Check the input */
@@ -83,5 +85,5 @@ int main(int argc, char **argv) {
 
   outputFile.close();
 
-  std::cout << "yeahhhhh LA\n";
+  std::cout << "LA o/\n";
 }

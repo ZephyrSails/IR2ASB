@@ -83,6 +83,7 @@ void output_function(L2::Function * f, std::ofstream * outputFile, L2::Graph * g
 }
 
 int main(int argc, char **argv) {
+  std::cout << "L2 o7\n";
   bool verbose;
 
   /* Check the input */
@@ -131,6 +132,6 @@ int main(int argc, char **argv) {
 
   outputFile << ")" << "\n";
   outputFile.close();
-
+  std::cout << "L2 o/\n";
   return 0;
 }

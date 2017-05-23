@@ -256,6 +256,7 @@ void cjump_ins(std::ofstream * outputFile, L1::Instruction * i, L1::Function * f
 }
 
 int main(int argc, char **argv) {
+  std::cout << "L1 o7\n";
   bool verbose;
 
   /* Check the input */
@@ -325,6 +326,6 @@ int main(int argc, char **argv) {
   }
   outputFile << "\n";
   outputFile.close();
-
+  std::cout << "L1 o/\n";
   return 0;
 }

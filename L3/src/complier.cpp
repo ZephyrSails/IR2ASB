@@ -7,6 +7,7 @@
 #include <merge.h>
 
 int main(int argc, char **argv) {
+  std::cout << "L3 o7\n";
   bool verbose;
 
   /* Check the input */
@@ -77,5 +78,5 @@ int main(int argc, char **argv) {
   outputFile << ")\n";
   outputFile.close();
 
-  L3::debug("yeahhhhh");
+  std::cout << "L3 o/\n";
 }

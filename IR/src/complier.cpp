@@ -2,6 +2,7 @@
 #include <parser.h>
 
 int main(int argc, char **argv) {
+  std::cout << "IR o7\n";
   bool verbose;
 
   /* Check the input */
@@ -57,6 +58,6 @@ int main(int argc, char **argv) {
 
   outputFile.close();
 
-  std::cout << "yeahhhhh IR\n";
-  // IR::debug("yeahhhhh");
+  std::cout << "IR o/\n";
+
 }
