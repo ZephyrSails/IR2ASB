@@ -304,14 +304,14 @@ namespace LA {
     bool checkID;
     for (int k = 0; k < 2; k++) {
       if (this->vars[k]->ts.size() > 0) {
-        o << "\n\tbr " << this->vars[k]->name << " :alloc_" << suffix << " :notalloc_" << suffix;
+        // o << "\n\tbr " << this->vars[k]->name << " :alloc_" << suffix << " :notalloc_" << suffix;
         checkID = k;
         allocChecked = true;
       }
     }
     if (allocChecked) {
-      o << "\n\t:notalloc_" << suffix;
-      o << "\n\tcall array-error(0, 0)";
+      // o << "\n\t:notalloc_" << suffix;
+      // o << "\n\tcall array-error(0, 0)";
       o << "\n\tbr :alloc_" << suffix;
       o << "\n\t:alloc_" << suffix;
 
