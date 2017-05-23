@@ -249,7 +249,13 @@ namespace LA {
   }
 
   void LA::InsCall::toIR(std::ofstream &o, LA::Function * currF) {
-    o << "\n\tcall " << this->vars[0]->toString() << "(";
+
+    if (LA::Program::FUNCS.count(this->vars[0]->toString())) {
+      o << "\n\tcall :" << this->vars[0]->toString() << "(";
+    } else {
+      o << "\n\tcall " << this->vars[0]->toString() << "(";
+    }
+
     if (this->vars.size() > 1) {
       o << this->vars[1]->toString();
       for (int k = 2; k < this->vars.size(); k++) {
