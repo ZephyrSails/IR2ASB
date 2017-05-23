@@ -68,21 +68,21 @@ namespace L3 {
         }
       } else { // cmp
         std::string suffix = std::to_string(rand());
-        std::string cmp;
+        std::string cmp = this->instances[0]->name;
         bool switched;
         if (this->instances[0]->name == ">=" || this->instances[0]->name == ">") {
           if (this->instances[0]->name == ">=") {
-            cmp = " <= ";
+            cmp = "<=";
           } else {
-            cmp = " < ";
+            cmp = "<";
           }
           switched = true;
         }
         res += "\n\t\t(" + this->name + " <- 0)";
         if (switched) {
-          res += "\n\t\t(cjump " + this->instances[0]->instances[1]->name + cmp + this->instances[0]->instances[0]->name + " :true_"  + suffix + " :false_" + suffix + ")";
+          res += "\n\t\t(cjump " + this->instances[0]->instances[1]->name + " " + cmp + " " + this->instances[0]->instances[0]->name + " :true_"  + suffix + " :false_" + suffix + ")";
         } else {
-          res += "\n\t\t(cjump " + this->instances[0]->instances[0]->name + cmp + this->instances[0]->instances[1]->name + " :true_"  + suffix + " :false_" + suffix + ")";
+          res += "\n\t\t(cjump " + this->instances[0]->instances[0]->name + " " + cmp + " " + this->instances[0]->instances[1]->name + " :true_"  + suffix + " :false_" + suffix + ")";
         }
 
         res += "\n\t\t:true_" + suffix;

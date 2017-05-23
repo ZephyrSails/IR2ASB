@@ -30,7 +30,7 @@ int main(int argc, char **argv) {
   IR::Program p = IR::IR_parse_file(argv[optind]);
 
   // outputFile << "(:main\n";
-
+  std::cout << "function count: " << p.functions.size() << "\n";
   for (auto f : p.functions) {
     outputFile << "define " << f->name << " ( ";
     if (f->arguments.size() > 0) {
@@ -57,6 +57,6 @@ int main(int argc, char **argv) {
 
   outputFile.close();
 
-  std::cout << "yeahhhhh\n";
+  std::cout << "yeahhhhh IR\n";
   // IR::debug("yeahhhhh");
 }
