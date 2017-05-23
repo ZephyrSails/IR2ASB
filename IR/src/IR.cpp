@@ -165,9 +165,10 @@ namespace IR {
 
     if (currF->type_map[this->vars[1]->name]->type == IR::TYPE::TUPLE) {
       o << "\n\taddr_" << suffix << " <- " << this->vars[1]->toString();
-      o << "\n\taddr_" << suffix << " <- " << "addr_" << suffix << " << 1";
-      o << "\n\taddr_" << suffix << " <- " << "addr_" << suffix << " + 1";
       o << "\n\t" << this->vars[0]->toString() << " <- load addr_" << suffix;
+      o << "\n\t" << this->vars[0]->toString() << " <- " << this->vars[0]->toString() << " << 1";
+      o << "\n\t" << this->vars[0]->toString() << " <- " << this->vars[0]->toString() << " + 1";
+
     } else {
       o << "\n\taddr_" << suffix << " <- 8 * " << this->vars[2]->toString();
       o << "\n\taddr_" << suffix << " <- addr_" << suffix << " + 16";
