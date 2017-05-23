@@ -38,7 +38,7 @@ namespace LA {
 
   std::string LA::Type::toString() {
     std::string res;
-    std::cout << "this->type: " << this->type << "\n";
+    // std::cout << "this->type: " << this->type << "\n";
     switch (this->type) {
       case LA::TYPE::TUPLE:
         res += "tuple";
@@ -149,14 +149,21 @@ namespace LA {
     // vars[0] <- call vars[1] (vars[2], ... vars[n])
     LA::Var* var = new LA::Var(v[0]);
     this->vars.push_back(var);
-    for (int k = 2; k < v.size(); k++) {
-      LA::Var* var = new LA::Var(v[k]);
+
+    var = new LA::Var(v[2], false, true);
+    this->vars.push_back(var);
+    for (int k = 3; k < v.size(); k++) {
+      var = new LA::Var(v[k]);
       this->vars.push_back(var);
     }
   }
 
   void LA::InsAssignCall::toIR(std::ofstream &o, LA::Function * currF) {
-    o << "\n\t" << this->vars[0]->toString() << " <- call " << this->vars[1]->toString() << "(";
+    if (LA::FUNCS.count(this->vars[1]->toString())) {
+      o << "\n\t" << this->vars[0]->toString() << " <- call :" << this->vars[1]->toString() << "(";
+    } else {
+      o << "\n\t" << this->vars[0]->toString() << " <- call " << this->vars[1]->toString() << "(";
+    }
     if (this->vars.size() > 2) {
       o << this->vars[2]->toString();
       for (int k = 3; k < this->vars.size(); k++) {

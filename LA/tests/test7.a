@@ -5,7 +5,7 @@ void main ( ){
   %t <- call createTuple(3)
   %v <- call myF(%t, 4)
   call print(%v)
-  return 
+  return
 
 }
 

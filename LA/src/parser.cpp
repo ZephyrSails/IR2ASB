@@ -429,7 +429,7 @@ namespace LA {
     static void apply( const pegtl::input & in, LA::Program & p, std::vector<std::string> & v ) {
       LA::Function *currF = p.functions.back();
       currF->name = in.string();
-
+      LA::FUNCS.insert(in.string());
       v.clear();
     }
   };

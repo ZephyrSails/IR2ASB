@@ -30,8 +30,10 @@ namespace LA {
 
   const std::string DECODE = "_DECODE";
 
-  const std::vector< std::string > ARGS = { "rdi", "rsi", "rdx", "rcx", "r8", "r9" };
-  const std::set< std::string > LIBS = { "allocate", "print", "array-error" };
+  const std::vector<std::string> ARGS = { "rdi", "rsi", "rdx", "rcx", "r8", "r9" };
+  const std::set<std::string> LIBS = { "allocate", "print", "array-error" };
+
+  inline std::set<std::string> FUNCS;
 
   // enum INS { VAR, N, LABEL, ELSE };
 
